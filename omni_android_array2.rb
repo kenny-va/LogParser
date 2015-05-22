@@ -2,6 +2,11 @@ require 'uri'
 require "./mobile-automation-values.rb"
 #require "pry"
 
+#TO DO'S
+
+#This means your script should also look for this
+#Log.d("OMNITURE_TEST", "---SAVED ARTICLES FUNCTIONALITY IS NOT TOGGLED ON---");
+
 
 #filename = "logcatOmnitureUSATcomplete.txt"
 #filename = "./data-android/omnitureTestBrevard.txt"
@@ -20,7 +25,7 @@ action_passes = "<p>"    #Holds test names which pass the content type test
 action_errors = "<p>"  # store the cumulative error list for content types
 
 article_style = "style='font-weight: bold;font-size: xx-large; background-color:yellow'"
-business_rule_style = "style='font-weight: bold;font-size: xx-large; background-color:grey'"
+business_rule_style = "style='font-weight: bold;font-size: xx-large; background-color:silver'"
 ad_style = "style='font-weight: bold;font-size: xx-large; background-color:orange;'"
 product_name_style = "style='font-weight: bold;font-size: xx-large; background-color:green'"
 gnt_style = "style='background-color: lightblue; '"
@@ -29,11 +34,12 @@ omni_style = "style='background-color: PaleGoldenRod; '"
 id = 1 #rolling id # to make unique api call divs
 product_name = ""  #Product being tested
 current_test = ""
+ad_parms = ""
 
 module_cnt = 0  #track the number of API calls for display purposes per test
 in_test = false #tracks if we are currently within a test when parsing the log
 
-ad_data = Array.new(1000) { Array.new(4) }   #array for ad calls.  1000 is upper bound.
+ad_data = Array.new(1000) { Array.new(5) }   #array for ad calls.  1000 is upper bound.
 ad_index = 0  #counter for ad call array
 
 #omni_data = Array.new(1000, Array.new(200, Array.new(2))) 
@@ -64,7 +70,10 @@ hf.write("<script src='sorttable.js'></script>")
 hf.write("<html><body>")
 hf.write("<a name='top_of_page'></a>")
 
-
+hf.write("<style>");
+hf.write(".odd{background-color: white;} ");
+hf.write(".even{background-color: silver;} ");
+hf.write("</style>");
 
 File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC LINES
  
@@ -86,7 +95,7 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
         
         elsif line.include? "END_OF_TEST"
             in_test = false
-            puts "End of #{current_test}"
+            puts "End of test"
 
         elsif line.include? "THE_PRODUCT_NAME_IS:"
 
@@ -94,8 +103,13 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
             product_name = product_name.slice(0,product_name.length-5)
         
 
+        elsif line.include? "Ads: Params:"     
+            ad_parms = line.slice(32,line.length)   
+            #puts "AD_Parms located: #{ad_parms}"
+
         elsif line.include? "AD_REQUEST"
         
+            puts "Ad_Request: #{line}"
             ad_values = line.split("::")
             
             j = 1
@@ -116,6 +130,10 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
                 j = j + 1
 
             end
+            ad_data[ad_index][4] = ad_parms  #Add the previously found ad parms from the log file
+            puts "Added ad_parms to ad_data: #{ad_data[ad_index][4]}"
+            ad_parms = ""   #Clear out the ad_parms to ensure we don't duplicate if not found in the log
+
             ad_index = ad_index + 1
 
         elsif line.include? "Analytics - Request Sent" and in_test
@@ -468,17 +486,17 @@ hf.write("<table style='width:100%'><tr><td " + ad_style +"'>AD CALLS</td></tr><
 
 hf.write("<a href=""javascript:ReverseDisplay('ADCALL_ID')"">Click to show/hide AD Calls</a>")
 hf.write("<div id='ADCALL_ID' style='display:none;'>")
-hf.write("<table class='sortable'><tr style='font-weight: bold;'><td>Section</td><td>AD Call</td><td>Size</td><td>AWS Value</td></tr>")
+hf.write("<table class='sortable'><tr style='font-weight: bold;'><td>Section</td><td>AD Call</td><td>Size</td><td>AWS Value</td><td>AD Parms</td></tr>")
 
 ad_data.each do |line|
     if ad_data[ad_index][0].nil?  #this signifies there are no more elements
         break
     else
-        hf.write("<tr>")    
         hf.write("<td>"+ad_data[ad_index][0]+"</td>")
         hf.write("<td>"+ad_data[ad_index][1]+"</td>")
         hf.write("<td>"+ad_data[ad_index][2]+"</td>")
         hf.write("<td>"+ad_data[ad_index][3]+"</td>")
+        hf.write("<td>"+ad_data[ad_index][4]+"</td>")
         hf.write("</tr>")
         ad_index = ad_index + 1
     end 

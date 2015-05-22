@@ -17,6 +17,8 @@
 
 
 var stIsIE = /*@cc_on!@*/false;
+var table;
+var rows;
 
 sorttable = {
   init: function() {
@@ -34,7 +36,18 @@ sorttable = {
     forEach(document.getElementsByTagName('table'), function(table) {
       if (table.className.search(/\bsortable\b/) != -1) {
         sorttable.makeSortable(table);
+
+          // adding code to alternate table color
+          var rows = table.getElementsByTagName("tr");   
+          for(i = 0; i < rows.length; i++) {           
+
+              if(i % 2 == 0) { 
+                rows[i].className = "even";  }
+              else { 
+                rows[i].className = "odd"; }       
+              }          
       }
+
     });
 
   },
@@ -102,6 +115,19 @@ sorttable = {
             sortrevind.id = "sorttable_sortrevind";
             sortrevind.innerHTML = stIsIE ? '&nbsp<font face="webdings">5</font>' : '&nbsp;&#x25B4;';
             this.appendChild(sortrevind);
+
+            // adding code to alternate table color
+            table = document.getElementById('ADCALL_ID');
+            rows = table.getElementsByTagName("tr");  
+            //alert ("Rows: " + rows.length) ;
+            for(i = 0; i < rows.length; i++) {           
+
+              if(i % 2 == 0) { 
+                rows[i].className = "even";  }
+              else { 
+                rows[i].className = "odd"; }       
+              } 
+
             return;
           }
           if (this.className.search(/\bsorttable_sorted_reverse\b/) != -1) {
@@ -115,7 +141,21 @@ sorttable = {
             sortfwdind.id = "sorttable_sortfwdind";
             sortfwdind.innerHTML = stIsIE ? '&nbsp<font face="webdings">6</font>' : '&nbsp;&#x25BE;';
             this.appendChild(sortfwdind);
+
+            // adding code to alternate table color
+            table = document.getElementById('ADCALL_ID');
+            rows = table.getElementsByTagName("tr");  
+            //alert ("Rows: " + rows.length) ;
+            for(i = 0; i < rows.length; i++) {           
+
+              if(i % 2 == 0) { 
+                rows[i].className = "even";  }
+              else { 
+                rows[i].className = "odd"; }       
+              } 
+
             return;
+
           }
 
           // remove sorttable_sorted classes
@@ -136,6 +176,8 @@ sorttable = {
           sortfwdind.id = "sorttable_sortfwdind";
           sortfwdind.innerHTML = stIsIE ? '&nbsp<font face="webdings">6</font>' : '&nbsp;&#x25BE;';
           this.appendChild(sortfwdind);
+
+
 
 	        // build an array to sort. This is a Schwartzian transform thing,
 	        // i.e., we "decorate" each row with the actual sort key,
@@ -158,6 +200,19 @@ sorttable = {
 	        }
 
 	        delete row_array;
+
+          // adding code to alternate table color
+          table = document.getElementById('ADCALL_ID');
+          rows = table.getElementsByTagName("tr");  
+          //alert ("Rows: " + rows.length) ;
+          for(i = 0; i < rows.length; i++) {           
+
+            if(i % 2 == 0) { 
+              rows[i].className = "even";  }
+            else { 
+              rows[i].className = "odd"; }       
+            }   
+                      
 	      });
 	    }
     }
