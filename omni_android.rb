@@ -1,27 +1,54 @@
 require 'uri'
 require "./mobile-automation-values.rb"
+#require "pry"
+
+#TO DO'S
+
+#This means your script should also look for this
+#Log.d("OMNITURE_TEST", "---SAVED ARTICLES FUNCTIONALITY IS NOT TOGGLED ON---");
 
 
 #filename = "logcatOmnitureUSATcomplete.txt"
-filename = "./data-android/omnitureTestWithMenuTap.txt"
+#filename = "./data-android/omnitureTestBrevard.txt"
+filename = "./data-android/testlog.txt"
 
+puts "Filename: " + filename
 
-puts "Filename: " + filename 
+content_type_passing_test = 0
+content_type_failing_test = 0
+content_type_passes = "<p>"    #Holds test names which pass the content type test
+content_type_errors = "<p>"  # store the cumulative error list for content types
+
+action_passing_test = 0
+action_failing_test = 0
+action_passes = "<p>"    #Holds test names which pass the content type test
+action_errors = "<p>"  # store the cumulative error list for content types
 
 article_style = "style='font-weight: bold;font-size: xx-large; background-color:yellow'"
-ad_style = "style='font-weight: bold;font-size: xx-large; background-color:orange'"
+business_rule_style = "style='font-weight: bold;font-size: xx-large; background-color:silver'"
+ad_style = "style='font-weight: bold;font-size: xx-large; background-color:orange;'"
 product_name_style = "style='font-weight: bold;font-size: xx-large; background-color:green'"
 gnt_style = "style='background-color: lightblue; '"
 omni_style = "style='background-color: PaleGoldenRod; '"
 
-id=1 #rolling id # to make unique api call divs
+id = 1 #rolling id # to make unique api call divs
 product_name = ""  #Product being tested
+current_test = ""
+ad_parms = ""
 
 module_cnt = 0  #track the number of API calls for display purposes per test
-cycle_cnt = 1 #track number of times we iterate through 4 modules
+in_test = false #tracks if we are currently within a test when parsing the log
 
-multi = Array.new(1000) { Array.new(4) }   #array for ad calls.  1000 is upper bound.
+ad_data = Array.new(1000) { Array.new(5) }   #array for ad calls.  1000 is upper bound.
 ad_index = 0  #counter for ad call array
+
+#omni_data = Array.new(1000, Array.new(200, Array.new(2))) 
+omni_data = My3Array.new
+omni_testname = Array.new(100,"")  #Stores the name of the automated test
+omni_url = Array.new(100,"")
+
+omni_index = 0  #counter for omniture calls
+omni_row = 0 #counter for # of parameters per omniture call
 
 #Create and open HTML file for output
 html_filename = filename.slice(0,filename.rindex(".")) + ".html"
@@ -37,118 +64,90 @@ hf.write("          e.style.display = 'block';")
 hf.write("    }") 
 hf.write("</script><br><br>")
 
+hf.write("<script src='sorttable.js'></script>")
+
 #Build the html table casing
 hf.write("<html><body>")
 hf.write("<a name='top_of_page'></a>")
-hf.write("<a href='#ad_calls'>Jump to AD Calls</a><br><br>")
 
-#hf.write("<tr style='font-weight: bold;'><td>Header Row</td></tr>")
+hf.write("<style>");
+hf.write(".odd{background-color: white;} ");
+hf.write(".even{background-color: silver;} ");
+hf.write("</style>");
 
-
-File.open(filename) do |file|
+File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC LINES
  
     file.each do |line|
 
-        #puts line
-
         if line.include? "---TESTNAME:"
-
-             #Close prior test table
-            if module_cnt > 0
-                hf.write("</td></tr></table>")
-            end
 
             #Get test name
             j = line.index("---TESTNAME:")  
-            $testname = line.slice(j+12,line.length)
-            hf.write("<table style='width:100%'><tr><td " + article_style +">"+$testname+"</td></tr></table>")
 
-            $in_test = true
+            # This will strip off the text prior to and after the TEST NAME
+            omni_testname[omni_index] = line.slice(j+12,line.length-(j+12+5))
+
+            in_test = true
             module_cnt = 0
-            cycle_cnt = 1
 
-            puts "Start of "+$testname
+            puts "Start of " + omni_testname[omni_index]
         
         
-        elsif line.include? "---THE_PRODUCT_NAME_IS:USA TODAY---"
+        elsif line.include? "END_OF_TEST"
+            in_test = false
+            puts "End of test"
+
+        elsif line.include? "THE_PRODUCT_NAME_IS:"
 
             product_name = line.slice(line.index("THE_PRODUCT_NAME_IS")+20,line.length)
             product_name = product_name.slice(0,product_name.length-5)
         
 
+        elsif line.include? "Ads: Params:"     
+            ad_parms = line.slice(32,line.length)   
+            #puts "AD_Parms located: #{ad_parms}"
+
         elsif line.include? "AD_REQUEST"
         
+            puts "Ad_Request: #{line}"
             ad_values = line.split("::")
-                 
-            #puts "Ad values(" + i.to_s + "): " + ad_values.inspect
             
             j = 1
             ad_values.each do |value|
-                #puts "J value: " + j.to_s
                 case j
                 when 1
                     #ignore "AD_REQUEST" delimiter
                 when 2
-                    multi[ad_index][0] = value #section
-                    #puts "Adding i,0"
+                    ad_data[ad_index][0] = value #section
                 when 3
-                    multi[ad_index][1] = value #adcall
-                    #puts "Adding i,1"
+                    ad_data[ad_index][1] = value #adcall
                 when 4
-                    multi[ad_index][2] = value #size
-                    #puts "Adding i,2"
+                    ad_data[ad_index][2] = value #size
                 when 6
-                    multi[ad_index][3] = value  #aws 
-                    #puts "Adding i,3"
+                    ad_data[ad_index][3] = value  #aws 
                 end
             
                 j = j + 1
 
-                #puts "Multi: " + multi[0][0] # + ":"+ multi[i][1] + ":"+ multi[i][2] + ":"+ multi[i][3] 
-
             end
+            ad_data[ad_index][4] = ad_parms  #Add the previously found ad parms from the log file
+            puts "Added ad_parms to ad_data: #{ad_data[ad_index][4]}"
+            ad_parms = ""   #Clear out the ad_parms to ensure we don't duplicate if not found in the log
+
             ad_index = ad_index + 1
 
-        elsif line.include? "Analytics - Request Sent" and $in_test
-            puts line
+        elsif line.include? "Analytics - Request Sent" and in_test
+     
             omni_call = URI.decode(line.slice(line.index("Analytics - Request Sent")+25,line.length))
-
-            #Print out entire Omniture call
-
-            puts " "
-            puts omni_call.slice(0,omni_call.index("?")-1)
+            omni_url[omni_index] = omni_call
 
             omni_call = omni_call.slice(omni_call.index("?")+1,omni_call.length)  #Strip off the domain and API call, leaving just the parameters
             omni_call = omni_call.slice(0,omni_call.length-3)  #strip off last )
-
-            puts "Parameters: " + omni_call
-            module_cnt = module_cnt + 1
-
-            case module_cnt
-            when 1
-                hf.write("<table><tr style='vertical-align: top;'><td>")
-            when 2
-                hf.write("</td><td>")
-            when 3
-                hf.write("</td><td>")
-            when 4
-                hf.write("</td></tr></table><table><tr style='vertical-align: top;'><td>")
-                module_cnt = 1
-                cycle_cnt = cycle_cnt + 1
-            end           
-
-            #Write out the API call
-            hf.write("<a href=""javascript:ReverseDisplay('myid" + id.to_s + "')"">Click to show/hide parameters</a>")
-            hf.write("<div id='myid" + id.to_s + "' style='display:none;'><table " + omni_style + "><tr><td>" + omni_call + "</td></tr></table></div>")
-            id = id + 1
-
-            omni_values = omni_call.split("&").sort
-
-            #Let's make the output pretty
-            hf.write ("<table " + omni_style + "><tr style='font-weight:bold'><td>Omniture Parameter</td><td>Value</td></row>")
-            
+           
             prefix_cnt = 0
             prefixes = ["","","","","",""] #this array holds the prefixes, ie: c.a.DeviceName
+            omni_row = 0
+            omni_values = omni_call.split("&").sort  #Split all the URL parameters
             
             omni_values.each do |value|           
 
@@ -165,58 +164,403 @@ File.open(filename) do |file|
                         prefix_cnt = prefix_cnt - 1
                         
                     elsif col == 1   #Parameter name
-                        hf.write("<tr " + omni_style + "><td>"+prefixes[0]+prefixes[1]+prefixes[2]+prefixes[4]+prefixes[5]+p_value+"</td>")
+                        #hf.write("<tr " + omni_style + "><td>"+prefixes[0]+prefixes[1]+prefixes[2]+prefixes[4]+prefixes[5]+p_value+"</td>")
                         col = 2
-                        
-                    elsif col==2  #Paramter value
-                        hf.write("<td>"+p_value+"</td></tr>")
+                        omni_data[omni_index,omni_row,0] = prefixes[0]+prefixes[1]+prefixes[2]+prefixes[4]+prefixes[5]+p_value.upcase        
+
+                    elsif col==2  #Parameter value
+                        #hf.write("<td>"+p_value+"</td></tr>")
                         col = 1 
-                    end
+
+                        omni_data[omni_index,omni_row,1] = p_value.upcase
+                        omni_row = omni_row + 1
+                    end                    
                 end
-                puts value
+                               
             end
+            omni_index = omni_index + 1
+
             hf.write("</table>")  
-            puts " "
-            puts " " 
 
         end
 
     end #each file record
-        
-    hf.write("</table>")     #End table wrapper for all omniture calls
 
 end #open file
 
+###################################################################################
+# AT THIS POINT ALL DATA HAS BEEN STORED.  NOW RUN THROUGH THE BUSINESS VALIDATION.
+###################################################################################
 
 
+current_test = ""
+tmp_idx = 0
+puts "Running through #{omni_index} calls"
+for x in 0..omni_index
+    #puts "Looping on index #{x} with testname: #{omni_testname[x]} "
+
+    if omni_testname[x].length > 0
+        current_test = omni_testname[x]
+        #puts "#{current_test} Checking parameters "
+    end
+
+    if current_test.length > 3  #just make sure the current_test variable is set
+        for y in 0..100 do
+            #puts "Checking parameter #{omni_data[x,y,0]} value #{omni_data[x,y,1]}"
+            if omni_data[x,y,0].nil?    #This means we've run out of parameters for the given URL
+                break
+            elsif omni_data[x,y,0] == "CONTENTTYPE"
+                
+                case current_test
+                when "LAUNCHAPP"
+                    if omni_data[x,y,1] == CONTENT_TYPE[LAUNCHAPP_CONST]
+                        content_type_passing_test = content_type_passing_test + 1
+                        content_type_passes = content_type_passes + current_test + "<br>"
+                    else
+                        content_type_failing_test = content_type_failing_test + 1
+                        content_type_errors = content_type_errors + current_test + " Content_Type Error: Value: " + omni_data[x,y,1] + " Should be: " + CONTENT_TYPE[LAUNCHAPP_CONST] + " <br>"
+                    end
+                when "ARTICLETAP"
+                    if omni_data[x,y,1] == CONTENT_TYPE[ARTICLE_TAP_CONST]
+                        content_type_passing_test = content_type_passing_test + 1
+                        content_type_passes = content_type_passes + current_test + "<br>"
+                    else
+                        content_type_failing_test = content_type_failing_test + 1
+                        content_type_errors = content_type_errors + current_test + " Content_Type Error: Value: " + omni_data[x,y,1] + " Should be: " + CONTENT_TYPE[ARTICLE_TAP_CONST] + " <br>"
+                    end
+                when "ARTICLESWIPE/NEXT", "ARTICLESWIPE/PREV"
+                    if omni_data[x,y,1] == CONTENT_TYPE[ARTICLESWIPE_CONST]
+                        content_type_passing_test = content_type_passing_test + 1
+                        content_type_passes = content_type_passes + current_test + "<br>"
+                    else
+                        content_type_failing_test = content_type_failing_test + 1
+                        content_type_errors = content_type_errors + current_test + " Content_Type Error: Value: " + omni_data[x,y,1] + " Should be: " + CONTENT_TYPE[ARTICLESWIPE_CONST] + " <br>"
+                    end                                 
+                when "SAVEDARTICLE_LANDSCAPE", "SAVEDARTICLE_PORTRAIT"
+                    if omni_data[x,y,1] == CONTENT_TYPE[SAVED_ARTICLE_CONST]
+                        content_type_passing_test = content_type_passing_test + 1
+                        content_type_passes = content_type_passes + current_test + "<br>"
+                    else
+                        content_type_failing_test = content_type_failing_test + 1
+                        content_type_errors = content_type_errors + current_test + " Content_Type Error: Value: " + omni_data[x,y,1] + " Should be: " + CONTENT_TYPE[SAVED_ARTICLE_CONST] + " <br>"
+                    end                                        
+                when "REFRESHCONTENT"
+                    if omni_data[x,y,1] == CONTENT_TYPE[REFRESH_CONTENT_CONST]
+                        content_type_passing_test = content_type_passing_test + 1
+                        content_type_passes = content_type_passes + current_test + "<br>"
+                    else
+                        content_type_failing_test = content_type_failing_test + 1
+                        content_type_errors = content_type_errors + current_test + " Content_Type Error: Value: " + omni_data[x,y,1] + " Should be: " + CONTENT_TYPE[REFRESH_CONTENT_CONST] + " <br>"
+                    end    
+                when "BREAKINGNEWSALERTON", "BREAKINGNEWSALERTOFF"
+                    if omni_data[x,y,1] == CONTENT_TYPE[BREAKING_NEWS_ALERT_CONST]
+                        content_type_passing_test = content_type_passing_test + 1
+                        content_type_passes = content_type_passes + current_test + "<br>"
+                    else
+                        content_type_failing_test = content_type_failing_test + 1
+                        content_type_errors = content_type_errors + current_test + " Content_Type Error: Value: " + omni_data[x,y,1] + " Should be: " + CONTENT_TYPE[BREAKING_NEWS_ALERT_CONST] + " <br>"
+                    end   
+                when "MENUTAP" 
+                    if omni_data[x,y,1] == CONTENT_TYPE[MENU_TAP_CONST]
+                        content_type_passing_test = content_type_passing_test + 1
+                        content_type_passes = content_type_passes + current_test + "<br>"
+                    else
+                        content_type_failing_test = content_type_failing_test + 1
+                        content_type_errors = content_type_errors + current_test + " Content_Type Error: Value: " + omni_data[x,y,1] + " Should be: " + CONTENT_TYPE[MENU_TAP_CONST] + " <br>"
+                    end   
+                when "WEATHERLOCATIONS" 
+                    if omni_data[x,y,1] == CONTENT_TYPE[WEATHER_LOCATIONS_CONST]
+                        content_type_passing_test = content_type_passing_test + 1
+                        content_type_passes = content_type_passes + current_test + "<br>"
+                    else
+                        content_type_failing_test = content_type_failing_test + 1
+                        content_type_errors = content_type_errors + current_test + " Content_Type Error: Value: " + omni_data[x,y,1] + " Should be: " + CONTENT_TYPE[WEATHER_LOCATIONS_CONST] + " <br>"
+                    end  
+                when "ARTICLELINK/GALLERY" 
+                    if omni_data[x,y,1] == CONTENT_TYPE[ARTICLE_LINK_GALLERY_CONST]
+                        content_type_passing_test = content_type_passing_test + 1
+                        content_type_passes = content_type_passes + current_test + "<br>"
+                    else
+                        content_type_failing_test = content_type_failing_test + 1
+                        content_type_errors = content_type_errors + current_test + " Content_Type Error: Value: " + omni_data[x,y,1] + " Should be: " + CONTENT_TYPE[ARTICLE_LINK_GALLERY_CONST] + " <br>"
+                    end  
+                when "ARTICLELINK/VIDEO" 
+                    if omni_data[x,y,1] == CONTENT_TYPE[ARTICLE_LINK_VIDEO_CONST]
+                        content_type_passing_test = content_type_passing_test + 1
+                        content_type_passes = content_type_passes + current_test + "<br>"
+                    else
+                        content_type_failing_test = content_type_failing_test + 1
+                        content_type_errors = content_type_errors + current_test + " Content_Type Error: Value: " + omni_data[x,y,1] + " Should be: " + CONTENT_TYPE[ARTICLE_LINK_VIDEO_CONST] + " <br>"
+                    end  
+                when "SETTINGS/ACCOUNTMANAGEMENT"
+                    if omni_data[x,y,1] == CONTENT_TYPE[SETTINGS_ACCT_MGT_CONST]
+                        content_type_passing_test = content_type_passing_test + 1
+                        content_type_passes = content_type_passes + current_test + "<br>"
+                    else
+                        content_type_failing_test = content_type_failing_test + 1
+                        content_type_errors = content_type_errors + current_test + " Content_Type Error: Value: " + omni_data[x,y,1] + " Should be: " + CONTENT_TYPE[SETTINGS_ACCT_MGT_CONST] + " <br>"
+                    end                      
+                else
+                    puts "Test name #{current_test}"
+                    hf.write("Invalid 'Content Type' test name found: #{current_test}<br>")
+                end
+            
+            elsif omni_data[x,y,0] == "ACTION" and omni_data[x,y,1] != "HOUSEADIMPRESSION"     #IGNORE AD IMPRESSIONS ACTIONS
+               
+                case current_test           
+                when "ARTICLESWIPE/NEXT"
+                    if omni_data[x,y,1] == "ARTICLESWIPE|NEXT"
+                        action_passing_test = action_passing_test + 1
+                        action_passes = action_passes + current_test + "<br>"
+                    else
+                        action_failing_test = action_failing_test + 1
+                        action_errors = action_errors + current_test + " Action Error: Value: " + omni_data[x,y,1] + " Should be: ARTICLESWIPE|NEXT<br>"
+                    end  
+                when "ARTICLESWIPE/PREV"
+                    if omni_data[x,y,1] == "ARTICLESWIPE|PREVIOUS"
+                        action_passing_test = action_passing_test + 1
+                        action_passes = action_passes + current_test + "<br>"
+                    else
+                        action_failing_test = action_failing_test + 1
+                        action_errors = action_errors + current_test + " Action Error: Value: " + omni_data[x,y,1] + " Should be: ARTICLESWIPE|PREVIOUS<br>"
+                    end                                                                      
+                when "REFRESHCONTENT"
+                    if omni_data[x,y,1] == "REFRESHCONTENT"
+                        action_passing_test = action_passing_test + 1
+                        action_passes = action_passes + current_test + "<br>"
+                    else
+                        action_failing_test = action_failing_test + 1
+                        action_errors = action_errors + current_test + " Action Error: Value: " + omni_data[x,y,1] + " Should be: REFRESHCONTENT<br>"
+                    end    
+                when "BREAKINGNEWSALERTON"
+                    if omni_data[x,y,1] == "ALERTS|BN|OFF"
+                        action_passing_test = action_passing_test + 1
+                        action_passes = action_passes + current_test + "<br>"
+                    else
+                        action_failing_test = action_failing_test + 1
+                        action_errors = action_errors + current_test + " Action Error: Value: " + omni_data[x,y,1] + " Should be: ALERTS|BN|OFF<br>"
+                    end  
+                when "BREAKINGNEWSALERTOFF"
+                    if omni_data[x,y,1] == "ALERTS|BN|ON"
+                        action_passing_test = action_passing_test + 1
+                        action_passes = action_passes + current_test + "<br>"
+                    else
+                        action_failing_test = action_failing_test + 1
+                        action_errors = action_errors + current_test + " Action Error: Value: " + omni_data[x,y,1] + " Should be: ALERTS|BN|ON<br>"
+                    end  
+
+                when "MENUTAP" 
+                    if omni_data[x,y,1].include? "NAVMENU"
+                        action_passing_test = action_passing_test + 1
+                        action_passes = action_passes + current_test + "<br>"
+                    else
+                        action_failing_test = action_failing_test + 1
+                        action_errors = action_errors + current_test + " Action Error: Value: " + omni_data[x,y,1] + " Should be like : NAVMENU*<br>"
+                    end  
+
+                when "WEATHERLOCATIONS" 
+                    if omni_data[x,y,1] == "NAVMENU|WEATHER"
+                        action_passing_test = action_passing_test + 1
+                        action_passes = action_passes + current_test + "<br>"
+                    else
+                        action_failing_test = action_failing_test + 1
+                        action_errors = action_errors + current_test + " Action Error: Value: " + omni_data[x,y,1] + " Should be: NAVMENU|WEATHER<br>"
+                    end  
+
+                when "ARTICLELINK/GALLERY" 
+                    if omni_data[x,y,1] == "NAVMENU|DAY_IN_PICTURES"
+                        action_passing_test = action_passing_test + 1
+                        action_passes = action_passes + current_test + "<br>"
+                    else
+                        action_failing_test = action_failing_test + 1
+                        action_errors = action_errors + current_test + " Action Error: Value: " + omni_data[x,y,1] + " Should be: NAVMENU|DAY_IN_PICTURES<br>"
+                    end  
+
+                when "ARTICLELINK/VIDEO" 
+                    if omni_data[x,y,1] == CONTENT_TYPE[ARTICLE_LINK_VIDEO_CONST]
+                        action_passing_test = action_passing_test + 1
+                        action_passes = action_passes + current_test + "<br>"
+                    else
+                        action_failing_test = action_failing_test + 1
+                        action_errors = action_errors + current_test + " Action Error: Value: " + omni_data[x,y,1] + " Should be: " + CONTENT_TYPE[ARTICLE_LINK_VIDEO_CONST] + " <br>"
+                    end  
+
+                when "SAVEDARTICLE_LANDSCAPE", "SAVEDARTICLE_PORTRAIT"
+                    if omni_data[x,y,1] == CONTENT_TYPE[SAVED_ARTICLE_CONST]
+                        action_passing_test = action_passing_test + 1
+                        action_passes = action_passes + current_test + "<br>"
+                    else
+                        action_failing_test = action_failing_test + 1
+                        action_errors = action_errors + current_test + " Content_Type Error: Value: " + omni_data[x,y,1] + " Should be: " + CONTENT_TYPE[SAVED_ARTICLE_CONST] + " <br>"
+                    end                       
+                    
+                else
+                    puts "Test name #{current_test}"
+                    hf.write("Invalid 'Action' test name found: #{current_test}<br>")
+                end
+            end
+        end
+    end
+end
+
+puts "Passing tests:#{content_type_passing_test}"
+puts "Failing tests:#{content_type_failing_test}"
+
+
+
+###################################################################################
+# PRINT OUT ALL BUSINESS RULE FINDINGS\
+###################################################################################
 
 #Print title
 hf.write("<table style='width:100%'><tr><td " + product_name_style +">PRODUCT TESTED: " + product_name + "</td></tr></table>")
 
-#Print out AD calls
+for i in 0..omni_index
+    if omni_testname[i].length > 0
+        hf.write("<a href='##{omni_testname[i]}'>Jump to #{omni_testname[i]}</a><br>")
+    end
+end
+
+###################################################################################
+#CONTENT TYPE RESULTS
+###################################################################################
+hf.write("<table style='width:100%'><tr><td " + business_rule_style +">CONTENT TYPE RESULTS  ")
+if content_type_failing_test == 0
+    hf.write("<img src='../green_checkmark.png' height=40>" )
+else
+    hf.write("<img src='../red_x.jpeg' height=40><br>" )
+end
+hf.write("</td></tr></table>")
+
+
+hf.write("<a href=""javascript:ReverseDisplay('CONTENTTYPE_ID')"">Click to show/hide Content Type tests</a>")
+hf.write("<div id='CONTENTTYPE_ID' style='display:none;'>")
+
+hf.write("<p>Passing content type rules: #{content_type_passing_test}")
+if content_type_failing_test == 0
+    hf.write("<img src='../green_checkmark.png' height=40>" )
+end
+hf.write("#{content_type_passes}")
+
+hf.write("<p>Failing content type rules: #{content_type_failing_test}")
+if content_type_failing_test > 0 
+    hf.write("<img src='../red_x.jpeg' height=40><br>" )
+    hf.write("#{content_type_errors}")
+end
+hf.write("</div>")
+
+
+###################################################################################
+#ACTION RESULTS
+###################################################################################
+hf.write("<table style='width:100%'><tr><td " + business_rule_style +">ACTION RESULTS  ")
+if action_failing_test == 0
+    hf.write("<img src='../green_checkmark.png' height=40>" )
+else
+    hf.write("<img src='../red_x.jpeg' height=40><br>" )
+end
+hf.write("</td></tr></table>")
+
+
+hf.write("<a href=""javascript:ReverseDisplay('ACTION_ID')"">Click to show/hide Action tests</a>")
+hf.write("<div id='ACTION_ID' style='display:none;'>")
+
+hf.write("<p>Passing action rules: #{action_passing_test}")
+if action_failing_test == 0
+    hf.write("<img src='../green_checkmark.png' height=40>" )
+end
+hf.write("#{action_passes}")
+
+hf.write("<p>Failing action rules: #{action_failing_test}")
+if action_failing_test > 0 
+    hf.write("<img src='../red_x.jpeg' height=40><br>" )
+    hf.write("#{action_errors}")
+end
+hf.write("</div>")
+
+
+###################################################################################
+# Print out AD calls
+###################################################################################
 ad_index=0
 hf.write("<p><p><a name='ad_calls'></a>")
-hf.write("<a href='#top_of_page'>Back to Top</a><br><br>")
-hf.write("<table style='width:100%'><tr><td " + ad_style +">AD CALLS</td></tr></table>")
-hf.write("<table><tr style='font-weight: bold;'><td>Section</td><td>AD Call</td><td>Size</td><td>AWS Value</td></tr>")
-multi.each do |line|
-    if multi[ad_index][0].nil?  #this signifies there are no more elements
+
+#hf.write("<table " + ad_style +"><tr><td>AD CALLS</td><td><a href=""javascript:ReverseDisplay('ADCALL_ID')"">Click to show/hide AD Calls</a></td></tr></table>")
+hf.write("<table style='width:100%'><tr><td " + ad_style +"'>AD CALLS</td></tr></table>")
+
+hf.write("<a href=""javascript:ReverseDisplay('ADCALL_ID')"">Click to show/hide AD Calls</a>")
+hf.write("<div id='ADCALL_ID' style='display:none;'>")
+hf.write("<table class='sortable'><tr style='font-weight: bold;'><td>Section</td><td>AD Call</td><td>Size</td><td>AWS Value</td><td>AD Parms</td></tr>")
+
+ad_data.each do |line|
+    if ad_data[ad_index][0].nil?  #this signifies there are no more elements
         break
     else
-        hf.write("<tr>")    
-        hf.write("<td>"+multi[ad_index][0]+"</td>")
-        hf.write("<td>"+multi[ad_index][1]+"</td>")
-        hf.write("<td>"+multi[ad_index][2]+"</td>")
-        hf.write("<td>"+multi[ad_index][3]+"</td>")
+        hf.write("<td>"+ad_data[ad_index][0]+"</td>")
+        hf.write("<td>"+ad_data[ad_index][1]+"</td>")
+        hf.write("<td>"+ad_data[ad_index][2]+"</td>")
+        hf.write("<td>"+ad_data[ad_index][3]+"</td>")
+        hf.write("<td>"+ad_data[ad_index][4]+"</td>")
         hf.write("</tr>")
         ad_index = ad_index + 1
     end 
 end #do
 
 #Build the html table casing
-hf.write("</table></body></html>")
+hf.write("</table></div>")
 
-#Build the html table casing
+
+#Beginning printing the smoke tests
+hf.write("<p><p><a href='#top_of_page'>Back to Top</a><br><br>")
+
+for x in 0..omni_index-1 #Loop through each omniture call
+
+    if omni_testname[x].length > 1
+        if module_cnt > 0
+            hf.write("</td></row></table>")
+        end
+        hf.write("<a name='#{omni_testname[x]}'></a>")
+        hf.write("<table style='width:100%'><tr><td " + article_style +">"+omni_testname[x]+"</td></tr></table>") 
+        hf.write("<a href='#top_of_page'>Back to Top</a><br><br>")  
+        module_cnt = 0
+    end
+
+    module_cnt = module_cnt + 1
+
+    case module_cnt
+    when 1
+        hf.write("<table><tr style='vertical-align: top;'><td>")
+    when 2
+        hf.write("</td><td>")
+    when 3
+        hf.write("</td><td>")
+    when 4
+        hf.write("</td></tr></table><table><tr style='vertical-align: top;'><td>")
+        module_cnt = 1
+    end           
+
+    #Write out the API call
+    hf.write("<a href=""javascript:ReverseDisplay('myid" + id.to_s + "')"">Click to show/hide parameters</a>")
+    hf.write("<div id='myid" + id.to_s + "' style='display:none;'><table " + omni_style + "><tr><td>" + omni_url[x] + "</td></tr></table></div>")
+    id = id + 1  
+
+    #Beginning of each omniture call
+    hf.write ("<table " + omni_style + "><tr style='font-weight:bold'><td>Omniture Parameter</td><td>Value</td></row>")
+    for y in 0..100   
+        if omni_data[x,y,0].nil? 
+            break
+        else    
+            hf.write("<tr " + omni_style + ">")
+            hf.write("<td>"+omni_data[x,y,0]+"</td>")
+            hf.write("<td>"+omni_data[x,y,1]+"</td>")
+            hf.write("</tr>")
+        end
+    end
+    hf.write("</table>")
+
+end 
+
 hf.write("</body></html>")
+
 
 
