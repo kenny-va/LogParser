@@ -7,10 +7,10 @@ require "./mobile-automation-values.rb"
 #This means your script should also look for this
 #Log.d("OMNITURE_TEST", "---SAVED ARTICLES FUNCTIONALITY IS NOT TOGGLED ON---");
 
-if ARGV[0].nil?
+
+filename = ARGV[0]
+if filename.length == 0
     filename = "./data-ios/ios-omniture.txt"
-else
-    filename = ARGV[0]
 end
 puts "Filename: " + filename
 

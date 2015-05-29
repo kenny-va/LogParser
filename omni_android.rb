@@ -10,8 +10,11 @@ require "./mobile-automation-values.rb"
 
 #filename = "logcatOmnitureUSATcomplete.txt"
 #filename = "./data-android/omnitureTestBrevard.txt"
-filename = "./data-android/testlog.txt"
-
+if ARGV[0].nil?
+    filename = "./data-android/testlog.txt"
+else
+    filename = ARGV[0]
+end
 puts "Filename: " + filename
 
 content_type_passing_test = 0
