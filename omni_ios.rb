@@ -85,7 +85,7 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
             j = line.index("---TESTNAME:")  
 
             # This will strip off the text prior to and after the TEST NAME
-            omni_testname[omni_index] = line.slice(j+12,line.length-(j+12+5))
+            omni_testname[omni_index] = line.slice(j+12,line.length-(j+12+4))
 
             in_test = true
             module_cnt = 0
@@ -97,10 +97,10 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
             in_test = false
             puts "End of test"
 
-        elsif line.include? "THE_PRODUCT_NAME_IS:"
-
-            product_name = line.slice(line.index("THE_PRODUCT_NAME_IS")+20,line.length)
-            product_name = product_name.slice(0,product_name.length-5)
+#        elsif line.include? "THE_PRODUCT_NAME_IS:"
+#
+#            product_name = line.slice(line.index("THE_PRODUCT_NAME_IS")+20,line.length)
+#            product_name = product_name.slice(0,product_name.length-5)
         
 
         elsif line.include? "Ads: Params:"     
@@ -135,11 +135,13 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
             ad_parms = ""   #Clear out the ad_parms to ensure we don't duplicate if not found in the log
 
             ad_index = ad_index + 1
+            puts "Ads found thus far: #{ad_index}"
 
         elsif line.include? "NSURLRequest" and in_test
      
-            omni_call = URI.decode(line.slice(line.index("Analytics - Request Sent")+25,line.length))
-            omni_url[omni_index] = omni_call
+            omni_call = URI.decode(line.slice(line.index("URL:")+5,line.length))
+            omni_url[omni_index] = omni_call.slice(0,omni_call.length-2)
+            puts "Omni_call: #{omni_url[omni_index]}"
 
             omni_call = omni_call.slice(omni_call.index("?")+1,omni_call.length)  #Strip off the domain and API call, leaving just the parameters
             omni_call = omni_call.slice(0,omni_call.length-3)  #strip off last )
@@ -173,6 +175,13 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
                         col = 1 
 
                         omni_data[omni_index,omni_row,1] = p_value.upcase
+                        
+                        #Get the product name
+                        if p_value == "PRODUCTNAME"
+                            product_name = omni_data[omni_index,omni_row,1]
+                            puts "Product name found (#{omni_data[omni_index,omni_row,0]}): #{product_name}"
+                        end
+
                         omni_row = omni_row + 1
                     end                    
                 end
