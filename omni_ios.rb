@@ -180,8 +180,6 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
                         if omni_data[omni_index,omni_row,0] == "PRODUCTNAME"
                             product_name = omni_data[omni_index,omni_row,1]
                             puts "Product name found (#{omni_data[omni_index,omni_row,0]}): #{product_name}"
-                        else
-                            puts "p_value: #{omni_data[omni_index,omni_row,0]}"
                         end
 
                         omni_row = omni_row + 1
@@ -423,10 +421,13 @@ puts "Failing tests:#{content_type_failing_test}"
 ###################################################################################
 # PRINT OUT ALL BUSINESS RULE FINDINGS\
 ###################################################################################
+=end
 
 #Print title
 hf.write("<table style='width:100%'><tr><td " + product_name_style +">PRODUCT TESTED: " + product_name + "</td></tr></table>")
 puts "Printing product name information.  Omni_index: #{omni_index}"
+
+=begin
 
 for i in 0..omni_index
     if omni_testname[i].length > 0
