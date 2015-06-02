@@ -171,15 +171,17 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
                         omni_data[omni_index,omni_row,0] = prefixes[0]+prefixes[1]+prefixes[2]+prefixes[4]+prefixes[5]+p_value.upcase        
 
                     elsif col==2  #Parameter value
-                        #hf.write("<td>"+p_value+"</td></tr>")
+                        
                         col = 1 
 
                         omni_data[omni_index,omni_row,1] = p_value.upcase
                         
                         #Get the product name
-                        if p_value == "PRODUCTNAME"
+                        if omni_data[omni_index,omni_row,0] == "PRODUCTNAME"
                             product_name = omni_data[omni_index,omni_row,1]
                             puts "Product name found (#{omni_data[omni_index,omni_row,0]}): #{product_name}"
+                        else
+                            puts "p_value: #{omni_data[omni_index,omni_row,0]}"
                         end
 
                         omni_row = omni_row + 1
@@ -201,6 +203,7 @@ end #open file
 # AT THIS POINT ALL DATA HAS BEEN STORED.  NOW RUN THROUGH THE BUSINESS VALIDATION.
 ###################################################################################
 
+=begin
 
 current_test = ""
 tmp_idx = 0
@@ -487,6 +490,8 @@ if action_failing_test > 0
     hf.write("#{action_errors}")
 end
 hf.write("</div>")
+
+=end
 
 
 ###################################################################################

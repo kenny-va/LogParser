@@ -195,6 +195,7 @@ end #open file
 # AT THIS POINT ALL DATA HAS BEEN STORED.  NOW RUN THROUGH THE BUSINESS VALIDATION.
 ###################################################################################
 
+=begin
 
 current_test = ""
 tmp_idx = 0
@@ -409,7 +410,7 @@ end
 puts "Passing tests:#{content_type_passing_test}"
 puts "Failing tests:#{content_type_failing_test}"
 
-
+=end
 
 ###################################################################################
 # PRINT OUT ALL BUSINESS RULE FINDINGS\
@@ -423,6 +424,8 @@ for i in 0..omni_index
         hf.write("<a href='##{omni_testname[i]}'>Jump to #{omni_testname[i]}</a><br>")
     end
 end
+
+=begin
 
 ###################################################################################
 #CONTENT TYPE RESULTS
@@ -481,6 +484,7 @@ if action_failing_test > 0
 end
 hf.write("</div>")
 
+=end
 
 ###################################################################################
 # Print out AD calls
