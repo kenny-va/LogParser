@@ -103,6 +103,12 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
 #            product_name = product_name.slice(0,product_name.length-5)
         
 
+        elsif line.include? "THE_PRODUCT_NAME_IS"
+
+            product_name = line.slice(line.index("THE_PRODUCT_NAME_IS") + 20,line.length)
+            puts "Product name is: #{product_name}"
+
+
         elsif line.include? "Ads: Params:"     
             ad_parms = line.slice(32,line.length)   
             #puts "AD_Parms located: #{ad_parms}"
@@ -175,13 +181,6 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
                         col = 1 
 
                         omni_data[omni_index,omni_row,1] = p_value.upcase
-                        
-                        #Get the product name
-                        if omni_data[omni_index,omni_row,0] == "PRODUCTNAME"
-                            product_name = omni_data[omni_index,omni_row,1]
-                            puts "Product name found (#{omni_data[omni_index,omni_row,0]}): #{product_name}"
-                        end
-
                         omni_row = omni_row + 1
                     end                    
                 end
