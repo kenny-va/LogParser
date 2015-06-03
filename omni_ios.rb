@@ -426,13 +426,15 @@ puts "Failing tests:#{content_type_failing_test}"
 hf.write("<table style='width:100%'><tr><td " + product_name_style +">PRODUCT TESTED: " + product_name + "</td></tr></table>")
 puts "Printing product name information.  Omni_index: #{omni_index}"
 
-=begin
+
 
 for i in 0..omni_index
     if omni_testname[i].length > 0
         hf.write("<a href='##{omni_testname[i]}'>Jump to #{omni_testname[i]}</a><br>")
     end
 end
+
+=begin
 
 ###################################################################################
 #CONTENT TYPE RESULTS
