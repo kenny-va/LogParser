@@ -8,7 +8,7 @@ require "./mobile-automation-values.rb"
 #Log.d("OMNITURE_TEST", "---SAVED ARTICLES FUNCTIONALITY IS NOT TOGGLED ON---");
 
 if ARGV[0].nil?
-    filename = "./data-ios/ios-omniture.txt"
+    filename = "./data-ios/ios-omniture2.txt"
 else
     filename = ARGV[0]
 end
@@ -37,7 +37,7 @@ current_test = ""
 ad_parms = ""
 
 module_cnt = 0  #track the number of API calls for display purposes per test
-in_test = false #tracks if we are currently within a test when parsing the log
+in_test = true #tracks if we are currently within a test when parsing the log
 
 ad_data = Array.new(1000) { Array.new(5) }   #array for ad calls.  1000 is upper bound.
 ad_index = 0  #counter for ad call array
@@ -113,39 +113,35 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
             ad_parms = line.slice(32,line.length)   
             #puts "AD_Parms located: #{ad_parms}"
 
-        elsif line.include? "AD_REQUEST"
+        elsif line.include? "/gampad/"
         
             puts "Ad_Request: #{line}"
-            ad_values = line.split("::")
-            
-            j = 1
-            ad_values.each do |value|
-                case j
-                when 1
-                    #ignore "AD_REQUEST" delimiter
-                when 2
-                    ad_data[ad_index][0] = value #section
-                when 3
-                    ad_data[ad_index][1] = value #adcall
-                when 4
-                    ad_data[ad_index][2] = value #size
-                when 6
-                    ad_data[ad_index][3] = value  #aws 
-                end
-            
-                j = j + 1
+            ad_values = line.split("&")
 
+            
+            ad_values.each do |value|
+                puts "Value comparing: " + value
+                if value.start_with? ("iu") 
+                    puts "found the &iu parameter"
+                    ad_data[ad_index][0] = URI.decode(value.slice(value.index("iu=")+3,value.length))
+                    puts "AD Data stored: " + ad_data[ad_index][0]
+                 
+                elsif value.start_with? ("sz") 
+                    puts "found the &sz parameter"
+                    ad_data[ad_index][1] = URI.decode(value.slice(value.index("sz=")+3,value.length))
+                    puts "AD Data stored: " + ad_data[ad_index][1]
+                end                
             end
-            ad_data[ad_index][4] = ad_parms  #Add the previously found ad parms from the log file
-            puts "Added ad_parms to ad_data: #{ad_data[ad_index][4]}"
-            ad_parms = ""   #Clear out the ad_parms to ensure we don't duplicate if not found in the log
+            
+            #puts "Added ad_parms to ad_data: #{ad_data[ad_index][4]}"
+            #ad_parms = ""   #Clear out the ad_parms to ensure we don't duplicate if not found in the log
 
             ad_index = ad_index + 1
             puts "Ads found thus far: #{ad_index}"
 
-        elsif line.include? "NSURLRequest" and in_test
+        elsif line.include? "gannett.demdex.net" and in_test
      
-            omni_call = URI.decode(line.slice(line.index("URL:")+5,line.length))
+            omni_call = URI.decode(line.slice(line.index("gannett.demdex.net/event?"),line.length))
             omni_url[omni_index] = omni_call.slice(0,omni_call.length-2)
             puts "Omni_call: #{omni_url[omni_index]}"
 
@@ -515,9 +511,9 @@ ad_data.each do |line|
     else
         hf.write("<td>"+ad_data[ad_index][0]+"</td>")
         hf.write("<td>"+ad_data[ad_index][1]+"</td>")
-        hf.write("<td>"+ad_data[ad_index][2]+"</td>")
-        hf.write("<td>"+ad_data[ad_index][3]+"</td>")
-        hf.write("<td>"+ad_data[ad_index][4]+"</td>")
+        #hf.write("<td>"+ad_data[ad_index][2]+"</td>")
+        #hf.write("<td>"+ad_data[ad_index][3]+"</td>")
+        #hf.write("<td>"+ad_data[ad_index][4]+"</td>")
         hf.write("</tr>")
         ad_index = ad_index + 1
     end 
