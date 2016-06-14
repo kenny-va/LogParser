@@ -1,0 +1,80 @@
+2016-06-08 15:38:37.643 | AppFinishLaunching
+2016-06-08 15:38:37.682 | GET | https://analytics.localytics.com/api/v2/applications/c289c3642a4c121f7abcf95-cd907c9e-7430-11e5-95b1-003e57fecdee/amp
+2016-06-08 15:38:39.963 | GET | http://www.gannett-cdn.com/ads/application/7103/config.json?cachebust=487107519.963226
+2016-06-08 15:38:39.964 | GET | http://www.gannett-cdn.com/ads/application/7103/config.json?cachebust=487107519.963226
+2016-06-08 15:38:40.014 | AppDidBecomeActive
+2016-06-08 15:38:40.018 | GET | http://gannett.demdex.net/event?c_a_Launches=2&c_a_LaunchEvent=LaunchEvent&c_a_DayOfWeek=4&c_a_DaysSinceLastUse=0&c_a_CarrierName=%28null%29&c_a_AppID=AppWatch%204.1.0%20%284.1.0%29&c_a_Resolution=768x1024&c_a_HourOfDay=15&c_a_OSVersion=iOS%209.3&c_a_locale=en-US&c_a_DaysSinceFirstUse=0&c_a_CrashEvent=CrashEvent&c_a_DeviceName=x86_64&d_uuid=05976029826681969556725635020822027601&d_dpid=3054&d_dpuuid=15DA523D-7A55-4A54-857D-DA0842EB52A5&d_ptfm=ios&d_dst=1&d_rtbd=json
+2016-06-08 15:38:40.019 | POST | http://repdata.usatoday.com/b/ss/gpapermobiletestsdk4/0/OIP-4.8.3/s8405248
+2016-06-08 15:38:40.029 | POST | https://analytics.localytics.com/api/v2/applications/c289c3642a4c121f7abcf95-cd907c9e-7430-11e5-95b1-003e57fecdee/uploads
+2016-06-08 15:38:40.038 | GET | https://sb.scorecardresearch.com/p2?c1=19&c2=6035223&ns_ap_an=USA%20TODAY&ns_ap_pn=ios&ns_ap_pv=9.3&c12=5E934E324BC8CC48160CEA67CE061242-cs62&ns_ak=NSSWuKjvxtuczmxJzBZeESBDcWnoD%2FF6s%2FOPgvHz%2FAhRRT9puicNKy6I23sWUClfWN6g2OORL7RH%2FUREz9zowZ1a9Rf5J2pT0n8pw%2BYifNuOXKaMkK5LrPfzLC%2F7Q0NhYoJZB2rh9x%2BVrI%2Bbg72qUacyKN6HMGtd6ILdjvupBNc%3D&name=MainContainerVC&ns_ap_ni=1&ns_ap_ec=1&ns_ap_ev=start&ns_ap_device=x86_64&ns_ap_id=1465414720031&ns_ap_csf=1&ns_ap_bi=com.usatoday.iPhone20&ns_ap_pfm=ios&ns_ap_pfv=9.3&ns_ap_ver=4.1.0&ns_ap_sv=3.1510.23&ns_type=view&ns_radio=wifi&ns_nc=1&ns_ap_gs=1465414688820&ns_ap_jb=1&ns_ap_res=768x1024&ns_ap_install=1465414688820&ns_ap_lastrun=0&ns_ap_cs=2&ns_ap_runs=2&ns_ap_usage=31212&ns_ap_fg=2&ns_ap_ft=8280&ns_ap_dft=8280&ns_ap_bt=0&ns_ap_dbt=0&ns_ap_dit=22880&ns_ap_as=0&ns_ap_das=31160&ns_ap_it=22880&ns_ap_lang=en-US&ns_ap_ar=x86_arch1&ns_ts=1465414720032
+2016-06-08 15:38:40.533 | GET | http://www.gannett-cdn.com/ads/application/7103/config.json?cachebust=487107520.532692
+2016-06-08 15:38:40.533 | GET | http://api.gannett-cdn.com/mobile/v4/galleryAlbums/1410095,1571989,1411301,1411813?api_key=99saas9t656jt89x3dae4n2d&consumer=ios_ipad
+2016-06-08 15:38:40.533 | GET | http://www.gannett-cdn.com/ads/application/7103/config.json?cachebust=487107520.532692
+2016-06-08 15:38:40.600 | POST | http://repdata.usatoday.com/b/ss/gpapermobiletestsdk4/0/OIP-4.8.3/s86261760
+2016-06-08 15:38:40.614 | GET | http://gannett.demdex.net/event?c_gnt_ssts_Section=topstories&c_gnt_prefs_PushSegments=breaking_news%7Cnull%7Cnull%7Cnull%7Cnull%7Cnull&c_gnt_alerts=on&c_gnt_Location=&c_gnt_Publication=usatoday&c_gnt_ContentType=sectionfront&c_gnt_quietTime=&c_gnt_OriginatingSection=TOP%20STORIES&c_gnt_locationservices=&c_gnt_Orientation=portrait&c_gnt_ssts_SubSection=&c_gnt_userStatus=unauthenticated&c_gnt_user_id=&c_gnt_appID=15DA523D-7A55-4A54-857D-DA0842EB52A5&c_gnt_aamsegment=testios%2Cios%2C300&c_gnt_windowsize=768x1024&c_gnt_MarketName=gpapermobileapp&c_gnt_layout=lucas%20test&c_a_DeviceName=x86_64&c_gnt_ProductName=USATODAY%20News%20iPad&c_a_OSVersion=9.3%20%2815E65%00%29&d_uuid=05976029826681969556725635020822027601&d_dpid=3054&d_dpuuid=15DA523D-7A55-4A54-857D-DA0842EB52A5&d_ptfm=ios&d_dst=1&d_rtbd=json
+2016-06-08 15:38:40.615 | POST | http://repdata.usatoday.com/b/ss/gpapermobiletestsdk4/0/OIP-4.8.3/s31481856
+2016-06-08 15:38:41.076 | GET | http://api.gannett-cdn.com/mobilefeeds/breakingnews/v1/ipad/?siteId=1&api_key=czrk9j52vxysvp4jgr5bwmcf
+
+2016-06-08 15:38:42.084 | THE_PRODUCT_NAME_IS USATODAY News iPad
+2016-06-08 15:38:42.085 | TESTNAME: -[AppUIAssetsTestsEarlGrey test01StandalonePhotosCaptionScrollableShare]
+2016-06-08 15:38:46.521 | GET | http://www.gannett-cdn.com/-mm-/5590b1070c57bbb052f2c93dc795c3576aeb6239/c=1-0-298-168&r=768x382/local/-/media/2015/09/09/USATodayTraining/USATodayTraining/635774125377055863-slash.jpeg
+2016-06-08 15:38:46.525 | GET | http://www.gannett-cdn.com/-mm-/6dbde05ba74ebcb793507b3144dae46a0607536d/c=0-20-220-144&r=467x250/local/-/media/2015/09/10/USATodayTraining/USATodayTraining/635774768540681088-Van-Halen-logo.png
+2016-06-08 15:38:46.534 | GET | http://www.gannett-cdn.com/-mm-/454f1fc13b15c0f3c40793ccc075e2ca50802410/c=0-5-280-163&r=467x228/local/-/media/2015/09/11/USATodayTraining/USATodayTraining/635775635071702006-camber.jpeg
+2016-06-08 15:38:46.538 | GET | http://www.gannett-cdn.com/-mm-/8256811ea18dda17243c8a393dfa52c05cdff38c/c=46-0-229-183&r=90x90/local/-/media/2015/09/10/USATodayTraining/USATodayTraining/635774772143079272-Satriani.jpeg
+2016-06-08 15:38:46.541 | GET | http://www.gannett-cdn.com/-mm-/8256811ea18dda17243c8a393dfa52c05cdff38c/c=46-0-229-183&r=90x90/local/-/media/2015/09/11/USATodayTraining/USATodayTraining/635775693950527928-seagull.jpeg
+2016-06-08 15:38:46.699 | GET | http://www.gannett-cdn.com/-mm-/bb5207eec5feaa941e76bb33807ae13dee3a1b3c/c=77-0-203-168&r=300x484/local/-/media/2015/09/10/USATodayTraining/USATodayTraining/635774785180010410-camber.jpeg
+2016-06-08 15:38:48.899 | GET | https://pubads.g.doubleclick.net/gampad/ads?ios_app_volume=1&d_imp_hdr=1&u_so=p&js=afma-sdk-i-v7.8.1&ios_output_volume=1&ios_base_sdk=9.3&force_https=1&u_mwsso=any&ms=11&hl=en&submodel=x86_64&u_sd=1&request_origin=pub&cap_bs=1&u_w=768&_request_object_properties=%5Bobject%20Object%5D&ios_app_muted=0&sz=300x250&ios_key_window_w=768&u_h=1024&request_id=1&net=wi&ios_key_window_h=1024&u_sso=any&adtest=on&format=300x250_as&forceHttps=true&_package_name=com.usatoday.iPhone20&u_audio=4&an=4.1.0.iphone.com.usatoday.iPhone20&swipeable=1&adk=3035215201&currts=1&seq_num=1&basets=1&output=html&region=mobile_app&u_tz=-240&content_url=http%3A%2F%2Fwww.usatoday.com%2F&url=4.1.0.iphone.com.usatoday.iPhone20.adsenseformobileapps.com&gdfp_req=1&markup=html&m_ast=afmajs&impl=ifr&iu=%2F7103%2Fusatoday_tablet%2FiPad_app-section_front_top%2Fnews%2Fmain&correlator=2229923544059928&_hl=en-us&gsb=wi&swdr=false&caps=interactiveVideo_inlineVideo_mraid1_mraid2_th_autoplay_mediation_av_sdkAdmobApiForAds_di_transparentBackground_aso_sfv_dinm_dim&blockAutoClicks=true&cust_params=idFlag%3Dtrue%26ver%3D4.1.0%26aam%3Dtestios%2Cios%2C300%26IDFA%3D15DA523D-7A55-4A54-857D-DA0842EB52A5&_efs=false&includeDoritos=true&eid=46621136&tcar=25&jsv=3-production-20160606_RC00&urll=1248
+2016-06-08 15:38:49.103 | AppWillResignActive
+2016-06-08 15:38:50.322 | END_OF_TEST: -[AppUIAssetsTestsEarlGrey test01StandalonePhotosCaptionScrollableShare]
+
+2016-06-08 15:38:54.530 | THE_PRODUCT_NAME_IS USATODAY News iPad
+2016-06-08 15:38:54.530 | TESTNAME: -[AppUIAssetsTestsEarlGrey test02EmbeddedPhotosCaptionScrollableShare]
+2016-06-08 15:38:55.422 | END_OF_TEST: -[AppUIAssetsTestsEarlGrey test02EmbeddedPhotosCaptionScrollableShare]
+
+2016-06-08 15:38:55.432 | THE_PRODUCT_NAME_IS USATODAY News iPad
+2016-06-08 15:38:55.432 | TESTNAME: -[AppUIAssetsTestsEarlGrey test03StandaloneVideosPauseScrubPlayback]
+2016-06-08 15:38:56.243 | END_OF_TEST: -[AppUIAssetsTestsEarlGrey test03StandaloneVideosPauseScrubPlayback]
+
+2016-06-08 15:38:56.253 | THE_PRODUCT_NAME_IS USATODAY News iPad
+2016-06-08 15:38:56.253 | TESTNAME: -[AppUISettingsTestsEarlGrey test00SettingsTest]
+2016-06-08 15:38:56.842 | END_OF_TEST: -[AppUISettingsTestsEarlGrey test00SettingsTest]
+
+2016-06-08 15:38:56.854 | THE_PRODUCT_NAME_IS USATODAY News iPad
+2016-06-08 15:38:56.854 | TESTNAME: -[AppUITestsEarlGrey test00ArticleSwipe]
+2016-06-08 15:38:57.702 | END_OF_TEST: -[AppUITestsEarlGrey test00ArticleSwipe]
+
+2016-06-08 15:38:57.710 | THE_PRODUCT_NAME_IS USATODAY News iPad
+2016-06-08 15:38:57.710 | TESTNAME: -[AppUITestsEarlGrey test01SavedArticles]
+2016-06-08 15:38:58.654 | END_OF_TEST: -[AppUITestsEarlGrey test01SavedArticles]
+
+2016-06-08 15:38:58.663 | THE_PRODUCT_NAME_IS USATODAY News iPad
+2016-06-08 15:38:58.663 | TESTNAME: -[AppUITestsEarlGrey test02QuickLinks]
+2016-06-08 15:38:59.355 | END_OF_TEST: -[AppUITestsEarlGrey test02QuickLinks]
+
+2016-06-08 15:38:59.364 | THE_PRODUCT_NAME_IS USATODAY News iPad
+2016-06-08 15:38:59.364 | TESTNAME: -[AppUITestsEarlGrey test03ScoresCard]
+2016-06-08 15:39:00.178 | END_OF_TEST: -[AppUITestsEarlGrey test03ScoresCard]
+
+2016-06-08 15:39:00.187 | THE_PRODUCT_NAME_IS USATODAY News iPad
+2016-06-08 15:39:00.187 | TESTNAME: -[AppUITestsEarlGrey test04StocksCard]
+2016-06-08 15:39:01.215 | END_OF_TEST: -[AppUITestsEarlGrey test04StocksCard]
+
+2016-06-08 15:39:01.215 | GET | https://ssl.google-analytics.com/collect?v=1&tid=UA-54227235-2&cid=2701697958&t=event&ec=Test%20Invocation&ea=b0ee09780fc3b515f9adb6189b3f0f8a&ev=13
+2016-06-08 15:39:01.215 | GET | https://ssl.google-analytics.com/collect?v=1&tid=UA-54227235-2&cid=2701697958&t=event&ec=Test%20Invocation&ea=b0ee09780fc3b515f9adb6189b3f0f8a&ev=13
+2016-06-08 15:39:01.225 | THE_PRODUCT_NAME_IS USATODAY News iPad
+2016-06-08 15:39:01.225 | TESTNAME: -[AppUITestsEarlGrey test05MainFrontCards]
+2016-06-08 15:39:02.294 | END_OF_TEST: -[AppUITestsEarlGrey test05MainFrontCards]
+
+2016-06-08 15:39:02.303 | THE_PRODUCT_NAME_IS USATODAY News iPad
+2016-06-08 15:39:02.304 | TESTNAME: -[AppUITestsEarlGrey test06Nav01]
+2016-06-08 15:39:03.130 | END_OF_TEST: -[AppUITestsEarlGrey test06Nav01]
+
+2016-06-08 15:39:03.140 | THE_PRODUCT_NAME_IS USATODAY News iPad
+2016-06-08 15:39:03.140 | TESTNAME: -[AppUITestsEarlGrey test09Gravity]
+2016-06-08 15:39:04.122 | END_OF_TEST: -[AppUITestsEarlGrey test09Gravity]
+
+2016-06-08 15:39:04.122 | GET | https://ssl.google-analytics.com/collect?v=1&tid=UA-54227235-2&cid=2590727562&t=event&ec=Test%20Invocation&ea=b0ee09780fc3b515f9adb6189b3f0f8a&ev=13
+2016-06-08 15:39:04.123 | GET | https://ssl.google-analytics.com/collect?v=1&tid=UA-54227235-2&cid=2590727562&t=event&ec=Test%20Invocation&ea=b0ee09780fc3b515f9adb6189b3f0f8a&ev=13
+2016-06-08 15:39:04.131 | THE_PRODUCT_NAME_IS USATODAY News iPad
+2016-06-08 15:39:04.132 | TESTNAME: -[AppUITestsEarlGrey test10Promo]
+2016-06-08 15:39:05.091 | END_OF_TEST: -[AppUITestsEarlGrey test10Promo]
