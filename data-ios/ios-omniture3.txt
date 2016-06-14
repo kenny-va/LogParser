@@ -36,7 +36,9 @@
 
 2016-06-08 15:38:56.253 | THE_PRODUCT_NAME_IS USATODAY News iPad
 2016-06-08 15:38:56.253 | TESTNAME: -[AppUISettingsTestsEarlGrey test00SettingsTest]
+
 2016-06-08 15:38:40.614 | GET | http://gannett.demdex.net/event?c_gnt_ssts_Section=topstories&c_gnt_prefs_PushSegments=breaking_news%7Cnull%7Cnull%7Cnull%7Cnull%7Cnull&c_gnt_alerts=on&c_gnt_Location=&c_gnt_Publication=usatoday&c_gnt_ContentType=sectionfront&c_gnt_quietTime=&c_gnt_OriginatingSection=TOP%20STORIES&c_gnt_locationservices=&c_gnt_Orientation=portrait&c_gnt_ssts_SubSection=&c_gnt_userStatus=unauthenticated&c_gnt_user_id=&c_gnt_appID=15DA523D-7A55-4A54-857D-DA0842EB52A5&c_gnt_aamsegment=testios%2Cios%2C300&c_gnt_windowsize=768x1024&c_gnt_MarketName=gpapermobileapp&c_gnt_layout=lucas%20test&c_a_DeviceName=x86_64&c_gnt_ProductName=USATODAY%20News%20iPad&c_a_OSVersion=9.3%20%2815E65%00%29&d_uuid=05976029826681969556725635020822027601&d_dpid=3054&d_dpuuid=15DA523D-7A55-4A54-857D-DA0842EB52A5&d_ptfm=ios&d_dst=1&d_rtbd=json
+
 2016-06-08 15:38:56.842 | END_OF_TEST: -[AppUISettingsTestsEarlGrey test00SettingsTest]
 
 2016-06-08 15:38:56.854 | THE_PRODUCT_NAME_IS USATODAY News iPad
