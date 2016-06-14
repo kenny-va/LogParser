@@ -1,0 +1,17 @@
+body {
+    background-color: lightgrey;
+}
+
+h1 {
+    color: blue;
+}
+
+p {
+    color:green;
+}
+
+article {
+	font-weight: bold;
+	font-size: xx-large; 
+	background-color:yellow;
+}
