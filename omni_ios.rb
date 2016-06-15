@@ -193,7 +193,8 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
 end #open file
 
 #Print title
-hf.write("<table style='width:100%'><tr><td " + product_name_style +">PRODUCT TESTED: " + product_name + "</td></tr></table>")
+hf.write("<table style='width:100%'><tr><td><product_name_style>PRODUCT TESTED: " + product_name + "</product_name_style></td></tr></table>")
+#hf.write("<table style='width:100%'><tr><td " + product_name_style +">PRODUCT TESTED: " + product_name + "</td></tr></table>")
 puts "Printing product name information.  Omni_index: #{omni_index}"
 
 
@@ -212,11 +213,11 @@ ad_index=0
 hf.write("<p><p><a name='ad_calls'></a>")
 
 #hf.write("<table " + ad_style +"><tr><td>AD CALLS</td><td><a href=""javascript:ReverseDisplay('ADCALL_ID')"">Click to show/hide AD Calls</a></td></tr></table>")
-hf.write("<table style='width:100%'><tr><td " + ad_style +"'>AD CALLS</td></tr></table>")
+hf.write("<table style='width:100%'><tr><td><ad_style>AD CALLS</ad_style></td></tr></table>")
 
 hf.write("<a href=""javascript:ReverseDisplay('ADCALL_ID')"">Click to show/hide AD Calls</a>")
 hf.write("<div id='ADCALL_ID' style='display:none;'>")
-hf.write("<table class='sortable'><tr style='font-weight: bold;'><td>Section</td><td>AD Call</td><td>Size</td><td>AWS Value</td><td>AD Parms</td></tr>")
+hf.write("<table class='sortable'><tr><hbold><td>Section</td><td>AD Call</td><td>Size</td><td>AWS Value</td><td>AD Parms</td></hbold></tr>")
 
 ad_data.each do |line|
     if ad_data[ad_index][0].nil?  #this signifies there are no more elements
@@ -248,7 +249,7 @@ for x in 0..omni_index-1 #Loop through each omniture call
             hf.write("</td></row></table>")
         end
         hf.write("<a name='#{omni_testname[x]}'></a>")
-        hf.write("<table style='width:100%'><tr><td><article>" + omni_testname[x] + "</article></td></tr></table>") 
+        hf.write("<table style='width:100%'><tr><td><article_style>" + omni_testname[x] + "</article_style></td></tr></table>") 
         #hf.write("<table style='width:100%'><tr><td " + article_style +">"+omni_testname[x]+"</td></tr></table>") 
 
         hf.write("<a href='#top_of_page'>Back to Top</a><br><br>")  
@@ -277,7 +278,7 @@ for x in 0..omni_index-1 #Loop through each omniture call
         id = id + 1  
 
         #Beginning of each omniture call
-        hf.write ("<table " + omni_style + "><tr style='font-weight:bold'><td>Omniture Parameter</td><td>Value</td></row>")
+        hf.write ("<table " + omni_style + "><tr><hbold><td>Omniture Parameter</td><td>Value</td></hbold></row>")
         for y in 0..100   
             if omni_data[x,y,0].nil? 
                 break
