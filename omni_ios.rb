@@ -87,7 +87,7 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
             j = line.index("TESTNAME:")  
 
             # This will strip off the text prior to and after the TEST NAME
-            omni_testname[omni_index] = line.slice(j+9,line.length)
+            omni_testname[omni_index] = line.slice(j+11,line.length-(j+10))
             #omni_testname[omni_index] = line.slice(j+9,line.length-(j+12+4))
             puts "Stored omni_testname: #{omni_testname[omni_index]}"
 
@@ -217,7 +217,7 @@ hf.write("<table style='width:100%'><tr><td><ad_style>AD CALLS</ad_style></td></
 
 hf.write("<a href=""javascript:ReverseDisplay('ADCALL_ID')"">Click to show/hide AD Calls</a>")
 hf.write("<div id='ADCALL_ID' style='display:none;'>")
-hf.write("<table class='sortable'><tr><td><hbold>Section</hbold></td><td>AD Call</td><td>Size</td><td>AWS Value</td><td>AD Parms</td></tr>")
+hf.write("<table class='sortable'><tr><td>Section</td><td>Size</td></tr>")
 
 ad_data.each do |line|
     if ad_data[ad_index][0].nil?  #this signifies there are no more elements
@@ -236,8 +236,10 @@ end #do
 #Build the html table casing
 hf.write("</table></div>")
 
-
+###################################################################################
 #Beginning printing the smoke tests
+###################################################################################
+
 hf.write("<p><p><a href='#top_of_page'>Back to Top</a><br><br>")
 
 puts "Value of omni_index: #{omni_index}"
@@ -278,7 +280,7 @@ for x in 0..omni_index-1 #Loop through each omniture call
         id = id + 1  
 
         #Beginning of each omniture call
-        hf.write ("<table " + omni_style + "><tr><hbold><td>Omniture Parameter</td><td>Value</td></hbold></row>")
+        hf.write ("<table " + omni_style + "><tr><td>Omniture Parameter</td><td>Value</td></row>")
         for y in 0..100   
             if omni_data[x,y,0].nil? 
                 break
