@@ -217,7 +217,7 @@ hf.write("<table style='width:100%'><tr><td><ad_style>AD CALLS</ad_style></td></
 
 hf.write("<a href=""javascript:ReverseDisplay('ADCALL_ID')"">Click to show/hide AD Calls</a>")
 hf.write("<div id='ADCALL_ID' style='display:none;'>")
-hf.write("<table class='sortable'><tr><hbold><td>Section</td><td>AD Call</td><td>Size</td><td>AWS Value</td><td>AD Parms</td></hbold></tr>")
+hf.write("<table class='sortable'><tr id=boldrow><td>Section</td><td>AD Call</td><td>Size</td><td>AWS Value</td><td>AD Parms</td></tr>")
 
 ad_data.each do |line|
     if ad_data[ad_index][0].nil?  #this signifies there are no more elements
