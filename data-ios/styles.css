@@ -10,8 +10,26 @@ p {
     color:green;
 }
 
-article {
+article_style {
 	font-weight: bold;
 	font-size: xx-large; 
 	background-color:yellow;
 }
+
+ad_style {
+	font-weight: bold;
+	font-size: xx-large; 
+	background-color:orange;
+}
+
+productname_style {
+	font-weight: bold;
+	font-size: xx-large; 
+	background-color:green;
+}
+
+hbold {
+	font-weight: : bold;
+}
+
+
