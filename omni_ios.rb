@@ -72,10 +72,10 @@ hf.write("<script src='sorttable.js'></script>")
 hf.write("<html><body>")
 hf.write("<a name='top_of_page'></a>")
 
-hf.write("<style>");
-hf.write(".odd{background-color: white;} ");
-hf.write(".even{background-color: silver;} ");
-hf.write("</style>");
+#hf.write("<style>");
+#hf.write(".odd{background-color: white;} ");
+#hf.write(".even{background-color: silver;} ");
+#hf.write("</style>");
 
 File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC LINES
  
