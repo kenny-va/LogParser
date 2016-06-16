@@ -280,7 +280,8 @@ for x in 0..omni_index-1 #Loop through each omniture call
         id = id + 1  
 
         #Beginning of each omniture call
-        hf.write ("<table " + omni_style + "><tr><td>Omniture Parameter</td><td>Value</td></row>")
+        #hf.write ("<table " + omni_style + "><tr><td>Omniture Parameter</td><td>Value</td></row>")
+        hf.write ("<table style=alternate_row><tr><td>Omniture Parameter</td><td>Value</td></row>")
         for y in 0..100   
             if omni_data[x,y,0].nil? 
                 break

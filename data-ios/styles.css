@@ -35,3 +35,8 @@ bold_style {
 #boldrow {
 	font-weight: : bold;
 }
+
+alternate_row {
+	.odd{background-color: white;
+	.even{background-color: silver;
+}
