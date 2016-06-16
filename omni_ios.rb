@@ -87,7 +87,7 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
             j = line.index("TESTNAME:")  
 
             # This will strip off the text prior to and after the TEST NAME
-            omni_testname[omni_index] = line.slice(j+12,line.length-(j+13))
+            omni_testname[omni_index] = line.slice(j+12,line.length-(j+15))
             #omni_testname[omni_index] = line.slice(j+9,line.length-(j+12+4))
             puts "Stored omni_testname: #{omni_testname[omni_index]}"
 
