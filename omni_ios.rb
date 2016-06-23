@@ -6,7 +6,7 @@ require "./mobile-automation-values.rb"
 
 
 if ARGV[0].nil?
-    filename = "./data-ios/ios-omniture3.txt"
+    filename = "./data-ios/api-url-logfile.txt"
 else
     filename = ARGV[0]
 end
@@ -263,33 +263,34 @@ for x in 0..omni_index-1 #Loop through each omniture call
 
     case module_cnt
     when 1
-        hf.write("<table><tr style='vertical-align: top;'><td>")
+        hf.write("<table><tr><td class=outsidetable>")
     when 2
-        hf.write("</td><td>")
-    when 3
-        hf.write("</td><td>")
-    when 4
-        hf.write("</td></tr></table><table><tr style='vertical-align: top;'><td>")
+        hf.write("</td><td class=outsidetable>")
+    #when 3
+    #    hf.write("</td><td>")
+    when 3,4
+        hf.write("</td></tr></table><table><tr><td>")
         module_cnt = 1
     end           
 
     
     if omni_url[x].length > 0 
         #Write out the API call
-        hf.write("<a href=""javascript:ReverseDisplay('myid" + id.to_s + "')"">Click to show/hide parameters</a>")
-        hf.write("<div id='myid" + id.to_s + "' style='display:none;'><table " + omni_style + "><tr><td>" + omni_url[x] + "</td></tr></table></div>")
+        #hf.write("<a href=""javascript:ReverseDisplay('myid" + id.to_s + "')"">Click to show/hide parameters</a>")
+        #hf.write("<div id='myid" + id.to_s + "' style='display:none;'><table " + omni_style + "><tr><td>" + omni_url[x] + "</td></tr></table></div>")
         id = id + 1  
 
         #Beginning of each omniture call
         #hf.write ("<table " + omni_style + "><tr><td>Omniture Parameter</td><td>Value</td></row>")
-        hf.write ("<table style=alternate_row><tr><td>Omniture Parameter</td><td>Value</td></row>")
+        hf.write ("<table class='hovertable'><tr><td>Omniture Parameter</td><td>Value</td></row>")
         for y in 0..100   
             if omni_data[x,y,0].nil? 
                 break
             else    
-                hf.write("<tr " + omni_style + ">")
-                hf.write("<td>"+omni_data[x,y,0]+"</td>")
-                hf.write("<td>"+omni_data[x,y,1]+"</td>")
+                #hf.write("<tr " + omni_style + ">")
+                hf.write("<tr class='hovertable'>")
+                hf.write("<td class='hovertable'>"+omni_data[x,y,0]+"</td>")
+                hf.write("<td class='hovertable'>"+omni_data[x,y,1]+"</td>")
                 hf.write("</tr>")
             end
         end

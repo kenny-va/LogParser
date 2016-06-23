@@ -1,5 +1,5 @@
 body {
-    background-color: lightgrey;
+    background-color: white;
 }
 
 h1 {
@@ -28,15 +28,34 @@ product_name_style {
 	background-color:green;
 }
 
-bold_style {
+.boldstyle {
 	font-weight: : bold;
 }
 
-#boldrow {
-	font-weight: : bold;
+.outsidetable {
+	vertical-align: top;
 }
 
-alternate_row {
-	.odd{background-color: white;
-	.even{background-color: silver;
+
+
+.hovertable {
+	font-family: verdana,arial,sans-serif;
+	font-size:11px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #999999;
+	border-collapse: collapse;
+	vertical-align: top;
+	width:40%;
+}
+
+.hovertable tr {
+	background-color:#d4e3e5;
+}
+.hovertable td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #a9c6c9;
+	vertical-align: top;
 }
