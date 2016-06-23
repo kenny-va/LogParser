@@ -119,7 +119,7 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
 
             
             ad_values.each do |value|
-                puts "Value comparing: " + value
+                #puts "Value comparing: " + value
                 if value.start_with? ("iu") 
                     puts "found the &iu parameter"
                     ad_data[ad_index][0] = URI.decode(value.slice(value.index("iu=")+3,value.length))
@@ -200,7 +200,7 @@ hf.write("<table style='width:100%'><tr><td><product_name_style>PRODUCT TESTED: 
 puts "Printing product name information.  Omni_index: #{omni_index}"
 
 for i in 0..omni_index
-    puts "For I: #{i}"
+    #puts "For I: #{i}"
     if omni_testname[i].length > 0
         hf.write("<a href='##{omni_testname[i]}'>Jump to #{omni_testname[i]}</a><br>")
     end
