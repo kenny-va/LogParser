@@ -95,6 +95,7 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
             module_cnt = 0
 
             puts "Start of " + omni_testname[omni_index]
+            omni_index = omni_index + 1
         
         
         elsif line.include? "END_OF_TEST"
@@ -180,9 +181,10 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
                 end
                                
             end
+            omni_index = omni_index + 1
 
         end
-            omni_index = omni_index + 1
+            
 
             hf.write("</table>")  
 
@@ -197,9 +199,8 @@ hf.write("<table style='width:100%'><tr><td><product_name_style>PRODUCT TESTED: 
 #hf.write("<table style='width:100%'><tr><td " + product_name_style +">PRODUCT TESTED: " + product_name + "</td></tr></table>")
 puts "Printing product name information.  Omni_index: #{omni_index}"
 
-
-
 for i in 0..omni_index
+    puts "For I: #{i}"
     if omni_testname[i].length > 0
         hf.write("<a href='##{omni_testname[i]}'>Jump to #{omni_testname[i]}</a><br>")
     end
