@@ -148,19 +148,30 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
             ad_index = ad_index + 1
             puts "Ads found thus far: #{ad_index}"
 
-        elsif line.include? "gannett.demdex.net" and in_test
+        elsif (line.include? "gannett.demdex.net" or line.include? "repdata.usatoday.com") and in_test
      
-            omni_call = URI.decode(line.slice(line.index("gannett.demdex.net/event?"),line.length))
-            omni_url[omni_index] = omni_call.slice(0,omni_call.length-2)
-            puts "Omni_call: #{omni_url[omni_index]}"
+            if line.include? "gannett.demdex.net"
+                omni_call = URI.decode(line.slice(line.index("gannett.demdex.net/event?"),line.length))
+                omni_url[omni_index] = omni_call.slice(0,omni_call.length-2)
 
-            omni_call = omni_call.slice(omni_call.index("?")+1,omni_call.length)  #Strip off the domain and API call, leaving just the parameters
-            omni_call = omni_call.slice(0,omni_call.length-3)  #strip off last )
-           
+                omni_call = omni_call.slice(omni_call.index("?")+1,omni_call.length)  #Strip off the domain and API call, leaving just the parameters
+                omni_call = omni_call.slice(0,omni_call.length-3)  #strip off last )
+            else
+                omni_call = URI.decode(line.slice(line.index("/ndh")+1,line.length))
+                omni_url[omni_index] = omni_call.slice(0,omni_call.length-2)
+
+                puts "Omni_call: #{omni_url[omni_index]}"  
+
+                #omni_call = omni_call.slice(omni_call.index("/ndh")-1,omni_call.length)  #Strip off the domain and API call, leaving just the parameters
+                #omni_call = omni_call.slice(0,omni_call.length-3)  #strip off last )
+            end 
+
+            #puts "Omni_call: #{omni_url[omni_index]}"  
+
             prefix_cnt = 0
             prefixes = ["","","","","",""] #this array holds the prefixes, ie: c.a.DeviceName
             omni_row = 0
-            omni_values = omni_call.split("&").sort  #Split all the URL parameters
+            omni_values = omni_call.split("&")  #Split all the URL parameters
             
             omni_values.each do |value|           
 
@@ -179,7 +190,8 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
                     elsif col == 1   #Parameter name
                         #hf.write("<tr " + omni_style + "><td>"+prefixes[0]+prefixes[1]+prefixes[2]+prefixes[4]+prefixes[5]+p_value+"</td>")
                         col = 2
-                        omni_data[omni_index,omni_row,0] = prefixes[0]+prefixes[1]+prefixes[2]+prefixes[4]+prefixes[5]+p_value.upcase        
+                        omni_data[omni_index,omni_row,0] = prefixes[0]+prefixes[1]+prefixes[2]+prefixes[4]+prefixes[5]+p_value.upcase     
+                        omni_data[omni_index,omni_row,0] = omni_data[omni_index,omni_row,0].upcase    
 
                     elsif col==2  #Parameter value
                         
@@ -191,14 +203,29 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
                 end
                                
             end
+
+            #Sort the parameters with the awesome bubble sort!
+            for index in 0..omni_row-1
+                for index2 in index..omni_row-1
+                    if omni_data[omni_index,index,0] > omni_data[omni_index,index2,0]
+                        testsave1 = omni_data[omni_index,index2,0]
+                        testsave2 = omni_data[omni_index,index2,1]
+                        
+                        omni_data[omni_index,index2,0] = omni_data[omni_index,index,0]
+                        omni_data[omni_index,index2,1] = omni_data[omni_index,index,1]
+                        
+                        omni_data[omni_index,index,0] = testsave1
+                        omni_data[omni_index,index,1] = testsave2
+                    end
+                end
+            end
+
             omni_index = omni_index + 1
 
         end
             
 
-            hf.write("</table>")  
-
-        #end - KJL moved this line up
+        hf.write("</table>")  
 
     end #each file record
 
@@ -273,13 +300,13 @@ for x in 0..omni_index-1 #Loop through each omniture call
 
     case module_cnt
     when 1
-        hf.write("<table><tr><td class=outsidetable>")
+        hf.write("<table><tr class='outsidetable'><td class='outsidetable'>")
     when 2
-        hf.write("</td><td class=outsidetable>")
-    #when 3
-    #    hf.write("</td><td>")
-    when 3,4
-        hf.write("</td></tr></table><table><tr><td>")
+        hf.write("</td><td class='outsidetable'>")
+    when 3
+        hf.write("</td><td class='outsidetable'>")
+    when 4
+        hf.write("</td></tr></table><table><tr class='outsidetable'><td class='outsidetable'>")
         module_cnt = 1
     end           
 
