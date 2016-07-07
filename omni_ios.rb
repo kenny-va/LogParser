@@ -112,6 +112,16 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
             #ad_parms = line.slice(32,line.length)   
             #puts "AD_Parms located: #{ad_parms}"
 
+        elsif line.include? "Beginning Omniture test:"
+
+            omni_url[omni_index] = line.slice(line.index("Beginning Omniture test:"),line.length)
+            omni_index = omni_index + 1
+
+        elsif line.include? "Ending Omniture test:"
+
+            omni_url[omni_index] = line.slice(line.index("Ending Omniture test:"),line.length)
+            omni_index = omni_index + 1
+
         elsif line.include? "/gampad/"
         
             puts "Ad_Request: #{line}"
@@ -275,26 +285,31 @@ for x in 0..omni_index-1 #Loop through each omniture call
 
     
     if omni_url[x].length > 0 
-        #Write out the API call
-        #hf.write("<a href=""javascript:ReverseDisplay('myid" + id.to_s + "')"">Click to show/hide parameters</a>")
-        #hf.write("<div id='myid" + id.to_s + "' style='display:none;'><table " + omni_style + "><tr><td>" + omni_url[x] + "</td></tr></table></div>")
-        id = id + 1  
 
-        #Beginning of each omniture call
-        #hf.write ("<table " + omni_style + "><tr><td>Omniture Parameter</td><td>Value</td></row>")
-        hf.write ("<table class='hovertable'><tr><td>Omniture Parameter</td><td>Value</td></row>")
-        for y in 0..100   
-            if omni_data[x,y,0].nil? 
-                break
-            else    
-                #hf.write("<tr " + omni_style + ">")
-                hf.write("<tr class='hovertable'>")
-                hf.write("<td class='hovertable'>"+omni_data[x,y,0]+"</td>")
-                hf.write("<td class='hovertable'>"+omni_data[x,y,1]+"</td>")
-                hf.write("</tr>")
+        if omni_url[x].include? "Omniture test:"
+            hf.write(omni_url[x]+"<br><br>")
+        else
+            #Write out the API call
+            #hf.write("<a href=""javascript:ReverseDisplay('myid" + id.to_s + "')"">Click to show/hide parameters</a>")
+            #hf.write("<div id='myid" + id.to_s + "' style='display:none;'><table " + omni_style + "><tr><td>" + omni_url[x] + "</td></tr></table></div>")
+            #id = id + 1  
+
+            #Beginning of each omniture call
+            #hf.write ("<table " + omni_style + "><tr><td>Omniture Parameter</td><td>Value</td></row>")
+            hf.write ("<table class='hovertable'><tr><td><bold>Omniture Parameter</bold></td><td>Value</td></row>")
+            for y in 0..100   
+                if omni_data[x,y,0].nil? 
+                    break
+                else    
+                    #hf.write("<tr " + omni_style + ">")
+                    hf.write("<tr class='hovertable'>")
+                    hf.write("<td class='hovertable'>"+omni_data[x,y,0]+"</td>")
+                    hf.write("<td class='hovertable'>"+omni_data[x,y,1]+"</td>")
+                    hf.write("</tr>")
+                end
             end
+            hf.write("</table>")
         end
-        hf.write("</table>")
     end
 
 end 
