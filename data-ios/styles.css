@@ -10,13 +10,13 @@ p {
     color:green;
 }
 
-article_style {
+.article_style {
 	font-weight: bold;
 	font-size: xx-large; 
 	background-color:yellow;
 }
 
-ad_style {
+.ad_style {
 	font-weight: bold;
 	font-size: xx-large; 
 	background-color:orange;
@@ -28,6 +28,12 @@ product_name_style {
 	background-color:green;
 }
 
+.omni_style {
+	font-weight: bold;
+	font-size: x-large; 
+	background-color:lightblue;
+}
+
 .boldstyle {
 	font-weight: : bold;
 }
@@ -36,7 +42,17 @@ product_name_style {
 	vertical-align: top;
 }
 
-
+.hovertable_header {
+	font-family: verdana,arial,sans-serif;
+	font-size:11px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #999999;
+	border-collapse: collapse;
+	font-weight: bold;
+	vertical-align: top;
+	width:40%;
+}
 
 .hovertable {
 	font-family: verdana,arial,sans-serif;

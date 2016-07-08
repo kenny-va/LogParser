@@ -24,7 +24,7 @@ action_errors = "<p>"  # store the cumulative error list for content types
 
 article_style = "style='font-weight: bold;font-size: xx-large; background-color:yellow'"
 business_rule_style = "style='font-weight: bold;font-size: xx-large; background-color:silver'"
-ad_style = "style='font-weight: bold;font-size: xx-large; background-color:orange;'"
+#ad_style = "style='font-weight: bold;font-size: xx-large; background-color:orange;'"
 product_name_style = "style='font-weight: bold;font-size: xx-large; background-color:green'"
 gnt_style = "style='background-color: lightblue; '"
 omni_style = "style='background-color: PaleGoldenRod; '"
@@ -100,8 +100,10 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
         
         elsif line.include? "END_OF_TEST"
             in_test = false
-            puts "End of test"        
 
+            omni_url[omni_index] = line.slice(line.index("END_OF_TEST:"),line.length)
+            omni_index = omni_index + 1
+            
         elsif line.include? "THE_PRODUCT_NAME_IS"
 
             product_name = line.slice(line.index("THE_PRODUCT_NAME_IS") + 20,line.length)
@@ -251,7 +253,7 @@ ad_index=0
 hf.write("<p><p><a name='ad_calls'></a>")
 
 #hf.write("<table " + ad_style +"><tr><td>AD CALLS</td><td><a href=""javascript:ReverseDisplay('ADCALL_ID')"">Click to show/hide AD Calls</a></td></tr></table>")
-hf.write("<table style='width:100%'><tr><td><ad_style>AD CALLS</ad_style></td></tr></table>")
+hf.write("<table style='width:100%'><tr class='ad_style'><td>AD CALLS</td></tr></table>")
 
 hf.write("<a href=""javascript:ReverseDisplay('ADCALL_ID')"">Click to show/hide AD Calls</a>")
 hf.write("<div id='ADCALL_ID' style='display:none;'>")
@@ -280,7 +282,7 @@ hf.write("</table></div>")
 
 hf.write("<p><p><a href='#top_of_page'>Back to Top</a><br><br>")
 
-puts "Value of omni_index: #{omni_index}"
+#puts "Value of omni_index: #{omni_index}"
 for x in 0..omni_index-1 #Loop through each omniture call
 
     if omni_testname[x].length > 1
@@ -289,10 +291,26 @@ for x in 0..omni_index-1 #Loop through each omniture call
             hf.write("</td></row></table>")
         end
         hf.write("<a name='#{omni_testname[x]}'></a>")
-        hf.write("<table style='width:100%'><tr><td><article_style>" + omni_testname[x] + "</article_style></td></tr></table>") 
+        hf.write("<table style='width:100%'><tr><td class='article_style'>" + omni_testname[x] + "</td></tr></table>") 
         #hf.write("<table style='width:100%'><tr><td " + article_style +">"+omni_testname[x]+"</td></tr></table>") 
 
         hf.write("<a href='#top_of_page'>Back to Top</a><br><br>")  
+        module_cnt = 0
+  
+    elsif omni_url[x].include? "Omniture test:"
+        if module_cnt > 0
+            hf.write("</td></row></table>")
+        end
+        hf.write("<table><tr class=omni_style><td>" + omni_url[x] + "</td></tr></table>") 
+
+        module_cnt = 0
+    
+    elsif omni_url[x].include? "END_OF_TEST:"
+        if module_cnt > 0
+            hf.write("</td></row></table>")
+        end
+        hf.write("<table><tr class=article_style><td>" + omni_url[x] + "</td></tr></table>") 
+
         module_cnt = 0
     end
 
@@ -313,9 +331,8 @@ for x in 0..omni_index-1 #Loop through each omniture call
     
     if omni_url[x].length > 0 
 
-        if omni_url[x].include? "Omniture test:"
-            hf.write(omni_url[x]+"<br><br>")
-        else
+        if !omni_url[x].include? "Omniture test:" and !omni_url[x].include? "END_OF_TEST:"
+
             #Write out the API call
             #hf.write("<a href=""javascript:ReverseDisplay('myid" + id.to_s + "')"">Click to show/hide parameters</a>")
             #hf.write("<div id='myid" + id.to_s + "' style='display:none;'><table " + omni_style + "><tr><td>" + omni_url[x] + "</td></tr></table></div>")
@@ -323,15 +340,15 @@ for x in 0..omni_index-1 #Loop through each omniture call
 
             #Beginning of each omniture call
             #hf.write ("<table " + omni_style + "><tr><td>Omniture Parameter</td><td>Value</td></row>")
-            hf.write ("<table class='hovertable'><tr><td><bold>Omniture Parameter</bold></td><td>Value</td></row>")
+            hf.write ("<table><tr class=hovertable_header><td>Omniture Parameter</td><td>Value</td></row>")
             for y in 0..100   
                 if omni_data[x,y,0].nil? 
                     break
                 else    
                     #hf.write("<tr " + omni_style + ">")
-                    hf.write("<tr class='hovertable'>")
-                    hf.write("<td class='hovertable'>"+omni_data[x,y,0]+"</td>")
-                    hf.write("<td class='hovertable'>"+omni_data[x,y,1]+"</td>")
+                    hf.write("<tr class=hovertable>")
+                    hf.write("<td>"+omni_data[x,y,0]+"</td>")
+                    hf.write("<td>"+omni_data[x,y,1]+"</td>")
                     hf.write("</tr>")
                 end
             end
