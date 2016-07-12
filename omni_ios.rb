@@ -12,16 +12,6 @@ else
 end
 puts "Filename: " + filename
 
-content_type_passing_test = 0
-content_type_failing_test = 0
-content_type_passes = "<p>"    #Holds test names which pass the content type test
-content_type_errors = "<p>"  # store the cumulative error list for content types
-
-action_passing_test = 0
-action_failing_test = 0
-action_passes = "<p>"    #Holds test names which pass the content type test
-action_errors = "<p>"  # store the cumulative error list for content types
-
 article_style = "style='font-weight: bold;font-size: xx-large; background-color:yellow'"
 business_rule_style = "style='font-weight: bold;font-size: xx-large; background-color:silver'"
 #ad_style = "style='font-weight: bold;font-size: xx-large; background-color:orange;'"
