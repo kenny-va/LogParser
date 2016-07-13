@@ -13,7 +13,7 @@ p {
 .article_style {
 	font-weight: bold;
 	font-size: xx-large; 
-	background-color:yellow;
+	background-color:lightgrey;
 }
 
 .ad_style {
@@ -25,13 +25,27 @@ p {
 product_name_style {
 	font-weight: bold;
 	font-size: xx-large; 
-	background-color:green;
+	background-color:mediumseagreen;
 }
 
 .omni_style {
 	font-weight: bold;
 	font-size: x-large; 
-	background-color:lightblue;
+	background-color:darkgray;
+}
+
+.begin_test_style {
+	font-weight: bold;
+	font-size: x-large; 
+	color: white;
+	background-color:black;
+}
+
+.end_test_style {
+	font-weight: bold;
+	font-size: x-large; 
+	color: white;
+	background-color:lightgrey;
 }
 
 .boldstyle {

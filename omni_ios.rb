@@ -37,6 +37,7 @@ omni_url = Array.new(100,"")
 
 omni_index = 0  #counter for omniture calls
 omni_row = 0 #counter for # of parameters per omniture call
+div_counter = 0 #counter to keep the divs for the omniture calls unique
 
 #Create and open HTML file for output
 html_filename = filename.slice(0,filename.rindex(".")) + ".html"
@@ -62,10 +63,6 @@ hf.write("<script src='sorttable.js'></script>")
 hf.write("<html><body>")
 hf.write("<a name='top_of_page'></a>")
 
-#hf.write("<style>");
-#hf.write(".odd{background-color: white;} ");
-#hf.write(".even{background-color: silver;} ");
-#hf.write("</style>");
 
 File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC LINES
  
@@ -100,10 +97,6 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
             puts "Product name is: #{product_name}"
 
 
-        #elsif line.include? "Ads: Params:"     
-            #ad_parms = line.slice(32,line.length)   
-            #puts "AD_Parms located: #{ad_parms}"
-
         elsif line.include? "Beginning Omniture test:"
 
             omni_url[omni_index] = line.slice(line.index("Beginning Omniture test:"),line.length)
@@ -133,9 +126,6 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
                     puts "AD Data stored: " + ad_data[ad_index][1]
                 end                
             end
-            
-            #puts "Added ad_parms to ad_data: #{ad_data[ad_index][4]}"
-            #ad_parms = ""   #Clear out the ad_parms to ensure we don't duplicate if not found in the log
 
             ad_index = ad_index + 1
             puts "Ads found thus far: #{ad_index}"
@@ -154,8 +144,6 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
 
                 puts "Omni_call: #{omni_url[omni_index]}"  
 
-                #omni_call = omni_call.slice(omni_call.index("/ndh")-1,omni_call.length)  #Strip off the domain and API call, leaving just the parameters
-                #omni_call = omni_call.slice(0,omni_call.length-3)  #strip off last )
             end 
 
             #puts "Omni_call: #{omni_url[omni_index]}"  
@@ -180,20 +168,16 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
                         prefix_cnt = prefix_cnt - 1
                         
                     elsif col == 1   #Parameter name
-                        #hf.write("<tr " + omni_style + "><td>"+prefixes[0]+prefixes[1]+prefixes[2]+prefixes[4]+prefixes[5]+p_value+"</td>")
                         col = 2
                         omni_data[omni_index,omni_row,0] = prefixes[0]+prefixes[1]+prefixes[2]+prefixes[4]+prefixes[5]+p_value.upcase     
                         omni_data[omni_index,omni_row,0] = omni_data[omni_index,omni_row,0].upcase    
 
                     elsif col==2  #Parameter value
-                        
                         col = 1 
-
                         omni_data[omni_index,omni_row,1] = p_value.upcase
                         omni_row = omni_row + 1
                     end                    
-                end
-                               
+                end           
             end
 
             #Sort the parameters with the awesome bubble sort!
@@ -281,7 +265,7 @@ for x in 0..omni_index-1 #Loop through each omniture call
             hf.write("</td></row></table>")
         end
         hf.write("<a name='#{omni_testname[x]}'></a>")
-        hf.write("<table style='width:100%'><tr><td class='article_style'>" + omni_testname[x] + "</td></tr></table>") 
+        hf.write("<table style='width:100%'><tr><td class='begin_test_style'>" + omni_testname[x] + "</td></tr></table>") 
         #hf.write("<table style='width:100%'><tr><td " + article_style +">"+omni_testname[x]+"</td></tr></table>") 
 
         hf.write("<a href='#top_of_page'>Back to Top</a><br><br>")  
@@ -299,7 +283,8 @@ for x in 0..omni_index-1 #Loop through each omniture call
         if module_cnt > 0
             hf.write("</td></row></table>")
         end
-        hf.write("<table><tr class=article_style><td>" + omni_url[x] + "</td></tr></table>") 
+        #hf.write("<table><tr class='article_style'><td>" + omni_url[x] + "</td></tr></table>") 
+        hf.write("<p class='end_test_style'>" + omni_url[x] + "</p><p><p>") 
 
         module_cnt = 0
     end
@@ -329,7 +314,8 @@ for x in 0..omni_index-1 #Loop through each omniture call
             #id = id + 1  
 
             #Beginning of each omniture call
-            #hf.write ("<table " + omni_style + "><tr><td>Omniture Parameter</td><td>Value</td></row>")
+            hf.write("<a href=""javascript:ReverseDisplay('myid" + div_counter.to_s + "')"">Omniture call " + div_counter.to_s + "</a>")
+            hf.write("<div id='myid" + div_counter.to_s + "' style='display:none;'>")
             hf.write ("<table><tr class=hovertable_header><td>Omniture Parameter</td><td>Value</td></row>")
             for y in 0..100   
                 if omni_data[x,y,0].nil? 
@@ -342,7 +328,8 @@ for x in 0..omni_index-1 #Loop through each omniture call
                     hf.write("</tr>")
                 end
             end
-            hf.write("</table>")
+            hf.write("</table></div>")
+            div_counter = div_counter + 1
         end
     end
 
