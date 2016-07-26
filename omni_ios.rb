@@ -277,7 +277,7 @@ for x in 0..omni_index-1 #Loop through each omniture call
         end
         hf.write("<table><tr class=omni_style><td>" + omni_url[x] + "</td></tr></table>") 
 
-        #module_cnt = 0
+        module_cnt = module_cnt + 1
     
     elsif omni_url[x].include? "END_OF_TEST:"
         if module_cnt > 0
