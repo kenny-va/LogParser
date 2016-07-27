@@ -271,7 +271,7 @@ for x in 0..omni_index-1 #Loop through each omniture call
         hf.write("<a href='#top_of_page'>Back to Top</a><br><br>")  
         module_cnt = 0
   
-    elsif omni_url[x].include? "Omniture test:"
+    elsif omni_url[x].include? "Beginning Omniture test:"
         if module_cnt > 0
             hf.write("</td></row></table>")
         end
@@ -279,36 +279,45 @@ for x in 0..omni_index-1 #Loop through each omniture call
 
         module_cnt = 0
     
+    elsif omni_url[x].include? "Ending Omniture test"
+        if module_cnt > 0
+            hf.write("</td></row></table>")
+        end
+
+        hf.write("<table><tr class=omni_style><td>" + omni_url[x] + "</td></tr></table><p><p><p>") 
+        module_cnt = 0
+
     elsif omni_url[x].include? "END_OF_TEST:"
         if module_cnt > 0
             hf.write("</td></row></table>")
         end
         #hf.write("<table><tr class='article_style'><td>" + omni_url[x] + "</td></tr></table>") 
-        hf.write("<p class='end_test_style'>" + omni_url[x] + "</p><p><p>") 
+        hf.write("<p class='end_test_style'>" + omni_url[x] + "</p><p><p><p><p>") 
 
         module_cnt = 0
     end
 
-    module_cnt = module_cnt + 1
-
-    case module_cnt
-    when 1
-        hf.write("<table><tr class='outsidetable'><td class='outsidetable'>")
-    when 2
-        hf.write("</td><td class='outsidetable'>")
-    when 3
-        hf.write("</td><td class='outsidetable'>")
-    when 4
-        hf.write("</td></tr></table><table><tr class='outsidetable'><td class='outsidetable'>")
-        module_cnt = 0
-    end           
-
-    
     if omni_url[x].length > 0 
 
         if !omni_url[x].include? "Omniture test:" and !omni_url[x].include? "END_OF_TEST:"
 
-            #Write out the API call
+            module_cnt = module_cnt + 1
+
+            case module_cnt
+                when 1
+                    hf.write("<table><tr class='outsidetable'><td class='outsidetable'>")
+                when 2
+                    hf.write("</td><td class='outsidetable'>")
+                when 3
+                    hf.write("</td><td class='outsidetable'>")
+                when 4
+                    hf.write("</td><td class='outsidetable'>") 
+                when 5
+                    hf.write("</td></tr></table><table><tr class='outsidetable'><td class='outsidetable'>")
+                    module_cnt = 0 
+            end     
+
+           #Write out the API call
             #hf.write("<a href=""javascript:ReverseDisplay('myid" + id.to_s + "')"">Click to show/hide parameters</a>")
             #hf.write("<div id='myid" + id.to_s + "' style='display:none;'><table " + omni_style + "><tr><td>" + omni_url[x] + "</td></tr></table></div>")
             #id = id + 1  
@@ -321,7 +330,6 @@ for x in 0..omni_index-1 #Loop through each omniture call
                 if omni_data[x,y,0].nil? 
                     break
                 else    
-                    #hf.write("<tr " + omni_style + ">")
                     hf.write("<tr class=hovertable>")
                     hf.write("<td>"+omni_data[x,y,0]+"</td>")
                     hf.write("<td>"+omni_data[x,y,1]+"</td>")
@@ -330,6 +338,9 @@ for x in 0..omni_index-1 #Loop through each omniture call
             end
             hf.write("</table></div>")
             div_counter = div_counter + 1
+            
+        else
+            puts "Strange omni_url value: #{omni_url[x]}"
         end
     end
 
