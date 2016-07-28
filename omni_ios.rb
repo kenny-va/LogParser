@@ -212,10 +212,12 @@ hf.write("<table style='width:100%'><tr><td><product_name_style>PRODUCT TESTED: 
 #hf.write("<table style='width:100%'><tr><td " + product_name_style +">PRODUCT TESTED: " + product_name + "</td></tr></table>")
 puts "Printing product name information.  Omni_index: #{omni_index}"
 
-for i in 0..omni_index
+for i in 0..omni_index - 1
     #puts "For I: #{i}"
-    if omni_testname[i].length > 0
-        hf.write("<a href='##{omni_testname[i]}'>Jump to #{omni_testname[i]}</a><br>")
+    if !omni_testname[i].nil?
+        if omni_testname[i].length > 0
+            hf.write("<a href='##{omni_testname[i]}'>Jump to #{omni_testname[i]}</a><br>")
+        end
     end
 end
 
@@ -259,7 +261,7 @@ hf.write("<p><p><a href='#top_of_page'>Back to Top</a><br><br>")
 #puts "Value of omni_index: #{omni_index}"
 for x in 0..omni_index-1 #Loop through each omniture call
 
-    if omni_testname[x].length > 1
+    if !omni_testname[x].nil? and omni_testname[x].length > 1
         puts "Testname length > 0:  #{omni_testname[x]}"
         if module_cnt > 0
             hf.write("</td></row></table>")
