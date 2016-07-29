@@ -35,9 +35,9 @@ omni_data = My3Array.new
 omni_testname = Array.new(100,"")  #Stores the name of the automated test
 omni_url = Array.new(100,"")
 
-for i in 0..99
-    omni_url[i] = "blank"
-end
+# for i in 0..99
+#     omni_url[i] = "blank"
+# end
 
 omni_index = 0  #counter for omniture calls
 omni_row = 0 #counter for # of parameters per omniture call
@@ -303,9 +303,9 @@ for x in 0..omni_index-1 #Loop through each omniture call
         module_cnt = 0
     end
 
-    if !omni_url.nil? and omni_url[x].length > 0 
+    if !omni_url[x].nil? and omni_url[x].length > 0 
 
-        if !omni_url.nil? and !omni_url[x].include? "Omniture test:" and !omni_url[x].include? "END_OF_TEST:"
+        if !omni_url[x].nil? and !omni_url[x].include? "Omniture test:" and !omni_url[x].include? "END_OF_TEST:"
 
             module_cnt = module_cnt + 1
 
