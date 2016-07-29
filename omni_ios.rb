@@ -299,7 +299,7 @@ for x in 0..omni_index-1 #Loop through each omniture call
         module_cnt = 0
     end
 
-    if omni_url[x].length > 0 
+    if !omni_url.nil? and omni_url[x].length > 0 
 
         if !omni_url.nil? and !omni_url[x].include? "Omniture test:" and !omni_url[x].include? "END_OF_TEST:"
 
