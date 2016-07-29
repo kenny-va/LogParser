@@ -33,7 +33,11 @@ ad_index = 0  #counter for ad call array
 #omni_data = Array.new(1000, Array.new(200, Array.new(2))) 
 omni_data = My3Array.new
 omni_testname = Array.new(100,"")  #Stores the name of the automated test
-omni_url = Array.new(100," ")
+omni_url = Array.new(100,"")
+
+for i in 0..99
+    omni_url[i] = "blank"
+end
 
 omni_index = 0  #counter for omniture calls
 omni_row = 0 #counter for # of parameters per omniture call
