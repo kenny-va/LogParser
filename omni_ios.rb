@@ -301,7 +301,7 @@ for x in 0..omni_index-1 #Loop through each omniture call
 
     if omni_url[x].length > 0 
 
-        if !omni_url[x].include? "Omniture test:" and !omni_url[x].include? "END_OF_TEST:"
+        if !omni_url.nil? and !omni_url[x].include? "Omniture test:" and !omni_url[x].include? "END_OF_TEST:"
 
             module_cnt = module_cnt + 1
 
