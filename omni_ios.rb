@@ -1,4 +1,5 @@
 require 'uri'
+require "./check_duplicate.rb"
 require "./mobile-automation-values.rb"
 #require "pry"
 
@@ -14,15 +15,13 @@ puts "Filename: " + filename
 
 article_style = "style='font-weight: bold;font-size: xx-large; background-color:yellow'"
 business_rule_style = "style='font-weight: bold;font-size: xx-large; background-color:silver'"
-#ad_style = "style='font-weight: bold;font-size: xx-large; background-color:orange;'"
+
 product_name_style = "style='font-weight: bold;font-size: xx-large; background-color:green'"
 gnt_style = "style='background-color: lightblue; '"
 omni_style = "style='background-color: PaleGoldenRod; '"
 
 id = 1 #rolling id # to make unique api call divs
 product_name = ""  #Product being tested
-current_test = ""
-#ad_parms = ""
 
 module_cnt = 0  #track the number of API calls for display purposes per test
 in_test = true #tracks if we are currently within a test when parsing the log
@@ -34,6 +33,8 @@ ad_index = 0  #counter for ad call array
 omni_data = My3Array.new
 omni_testname = Array.new(100,"")  #Stores the name of the automated test
 omni_url = Array.new(100,"")
+duplicate_array = Array.new(10,"")  # Stores names of test that are duplicate. These are prevented from printing out more than once.
+duplicate_count = 0  #Stores actual number of entries in the duplicate_array
 
 # for i in 0..99
 #     omni_url[i] = "blank"
@@ -78,7 +79,7 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
             j = line.index("TESTNAME:")  
 
             # This will strip off the text prior to and after the TEST NAME
-            omni_testname[omni_index] = line.slice(j+12,line.length-(j+14))
+            omni_testname[omni_index] = line.slice(j+12,line.length-(j+12+2)) #(j+14))
             #omni_testname[omni_index] = line.slice(j+9,line.length-(j+12+4))
             puts "Stored omni_testname: #{omni_testname[omni_index]}"
 
@@ -113,7 +114,7 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
 
         elsif line.include? "/gampad/"
         
-            puts "Ad_Request: #{line}"
+            #puts "Ad_Request: #{line}"
             ad_values = line.split("&")
 
             
@@ -147,7 +148,7 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
                 omni_call = URI.decode(line.slice(line.index("/ndh")+1,line.length))
                 omni_url[omni_index] = omni_call.slice(0,omni_call.length-2)
 
-                puts "Omni_call: #{omni_url[omni_index]}"  
+                #puts "Omni_call: #{omni_url[omni_index]}"  
 
             end 
 
@@ -279,20 +280,37 @@ for x in 0..omni_index-1 #Loop through each omniture call
         module_cnt = 0
   
     elsif omni_url[x].include? "Beginning Omniture test:"
-        if module_cnt > 0
-            hf.write("</td></row></table>")
+        
+        #Check for a duplicate test
+        puts "Calling duplicate function with #{omni_url[x]}"
+        #puts omni_url[x]
+        duplicate = check_duplicate(duplicate_array, duplicate_count, omni_url[x])
+        if !duplicate
+            duplicate_array[duplicate_count] = omni_url[x]
+            duplicate_count = duplicate_count + 1
         end
-        hf.write("<table><tr class=omni_style><td>" + omni_url[x] + "</td></tr></table>") 
+        puts "Is this a duplicate? #{duplicate}"
 
-        module_cnt = 0
-    
+        if !duplicate
+            if module_cnt > 0
+                hf.write("</td></row></table>")
+            end
+            hf.write("<table><tr class=omni_style><td>" + omni_url[x] + "</td></tr></table>") 
+
+            module_cnt = 0
+        end
+
     elsif omni_url[x].include? "Ending Omniture test"
-        if module_cnt > 0
-            hf.write("</td></row></table>")
-        end
+        if !duplicate
+            if module_cnt > 0
+                hf.write("</td></row></table>")
+            end
 
-        hf.write("<table><tr class=omni_style><td>" + omni_url[x] + "</td></tr></table><p><p><p>") 
-        module_cnt = 0
+            hf.write("<table><tr class=omni_style><td>" + omni_url[x] + "</td></tr></table><p><p><p>") 
+            module_cnt = 0
+        else
+            duplicate = false #reset duplicate value for next omniture test
+        end
 
     elsif omni_url[x].include? "END_OF_TEST:"
         if module_cnt > 0
@@ -304,7 +322,7 @@ for x in 0..omni_index-1 #Loop through each omniture call
         module_cnt = 0
     end
 
-    if !omni_url[x].nil? and omni_url[x].length > 0 
+    if !omni_url[x].nil? and omni_url[x].length > 0 and !duplicate
 
         if !omni_url[x].nil? and !omni_url[x].include? "Omniture test:" and !omni_url[x].include? "END_OF_TEST:"
 
