@@ -22,6 +22,7 @@ omni_style = "style='background-color: PaleGoldenRod; '"
 
 id = 1 #rolling id # to make unique api call divs
 product_name = ""  #Product being tested
+environment_tested = ""
 
 module_cnt = 0  #track the number of API calls for display purposes per test
 in_test = false #tracks if we are currently within a test when parsing the log
@@ -101,6 +102,9 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
             product_name = line.slice(line.index("THE_PRODUCT_NAME_IS") + 20,line.length)
             puts "Product name is: #{product_name}"
 
+
+        elsif line.include? "Testing environment:"
+            environment_tested = line.slice(line.index("Testing environment") + 21,line.length)
 
         elsif line.include? "Beginning Omniture test:"
 
@@ -222,7 +226,8 @@ end #open file
 #
 ###################################################################################
 
-hf.write("<table style='width:100%'><tr><td><product_name_style>PRODUCT TESTED: " + product_name + "</product_name_style></td></tr></table>")
+hf.write("<table style='width:100%'><tr><td><product_name_style>PRODUCT TESTED: " + product_name + "</product_name_style></td></tr>")
+hf.write("<tr><td>Environment tested: #{environment_tested}</td></tr></table>")
 
 puts "Printing product name information.  Omni_index: #{omni_index}"
 
