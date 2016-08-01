@@ -24,7 +24,7 @@ id = 1 #rolling id # to make unique api call divs
 product_name = ""  #Product being tested
 
 module_cnt = 0  #track the number of API calls for display purposes per test
-in_test = true #tracks if we are currently within a test when parsing the log
+in_test = false #tracks if we are currently within a test when parsing the log
 
 ad_data = Array.new(1000) { Array.new(5) }   #array for ad calls.  1000 is upper bound.
 ad_index = 0  #counter for ad call array
@@ -93,7 +93,7 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
         elsif line.include? "END_OF_TEST"
             in_test = false
 
-            omni_url[omni_index] = line.slice(line.index("END_OF_TEST:"),line.length)
+            omni_url[omni_index] = line.slice(line.index("END_OF_TEST:"),line.length).strip
             omni_index = omni_index + 1
             
         elsif line.include? "THE_PRODUCT_NAME_IS"
@@ -104,12 +104,12 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
 
         elsif line.include? "Beginning Omniture test:"
 
-            omni_url[omni_index] = line.slice(line.index("Beginning Omniture test:"),line.length)
+            omni_url[omni_index] = line.slice(line.index("Beginning Omniture test:"),line.length).strip
             omni_index = omni_index + 1
 
         elsif line.include? "Ending Omniture test:"
 
-            omni_url[omni_index] = line.slice(line.index("Ending Omniture test:"),line.length)
+            omni_url[omni_index] = line.slice(line.index("Ending Omniture test:"),line.length).strip
             omni_index = omni_index + 1
 
         elsif line.include? "/gampad/"
@@ -213,23 +213,49 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
 
 end #open file
 
-#Print title
+###################################################################################
+#
+#
+#
+# Print title and anchor tags
+#
+#
+###################################################################################
+
 hf.write("<table style='width:100%'><tr><td><product_name_style>PRODUCT TESTED: " + product_name + "</product_name_style></td></tr></table>")
-#hf.write("<table style='width:100%'><tr><td " + product_name_style +">PRODUCT TESTED: " + product_name + "</td></tr></table>")
+
 puts "Printing product name information.  Omni_index: #{omni_index}"
 
 for i in 0..omni_index - 1
-    #puts "For I: #{i}"
     if !omni_testname[i].nil?
         if omni_testname[i].length > 0
-            hf.write("<a href='##{omni_testname[i]}'>Jump to #{omni_testname[i]}</a><br>")
+            hf.write("<p><p><a href='##{omni_testname[i]}'>Jump to #{omni_testname[i]}</a><br>")
+        end
+    end
+    if !omni_url[i].nil?
+        if omni_url[i].length > 0 and omni_url[i].include?"Beginning Omniture"
+            duplicate = check_duplicate(duplicate_array, duplicate_count, omni_url[i])
+            if !duplicate
+                duplicate_array[duplicate_count] = omni_url[i]
+                duplicate_count = duplicate_count + 1
+                hf.write("&emsp;<a href='##{omni_url[i]}'>#{omni_url[i].slice(omni_url[i].index("Beginning")+10,200)}</a><br>")
+            end            
         end
     end
 end
 
+# clear the duplicate data (to be used again later)
+duplicate_count = 0
+duplicate_array.clear
 
 ###################################################################################
+#
+#
+#
 # Print out AD calls
+#
+#
+#
 ###################################################################################
 ad_index=0
 hf.write("<p><p><a name='ad_calls'></a>")
@@ -259,7 +285,13 @@ end #do
 hf.write("</table></div>")
 
 ###################################################################################
+#
+#
+#
 #Beginning printing the smoke tests
+#
+#
+#
 ###################################################################################
 
 hf.write("<p><p><a href='#top_of_page'>Back to Top</a><br><br>")
@@ -274,7 +306,7 @@ for x in 0..omni_index-1 #Loop through each omniture call
         end
         hf.write("<a name='#{omni_testname[x]}'></a>")
         hf.write("<table style='width:100%'><tr><td class='begin_test_style'>" + omni_testname[x] + "</td></tr></table>") 
-        #hf.write("<table style='width:100%'><tr><td " + article_style +">"+omni_testname[x]+"</td></tr></table>") 
+        
 
         hf.write("<a href='#top_of_page'>Back to Top</a><br><br>")  
         module_cnt = 0
@@ -295,6 +327,7 @@ for x in 0..omni_index-1 #Loop through each omniture call
             if module_cnt > 0
                 hf.write("</td></row></table>")
             end
+            hf.write("<a name='#{omni_url[x].strip}'></a>")
             hf.write("<table><tr class=omni_style><td>" + omni_url[x] + "</td></tr></table>") 
 
             module_cnt = 0
@@ -316,7 +349,7 @@ for x in 0..omni_index-1 #Loop through each omniture call
         if module_cnt > 0
             hf.write("</td></row></table>")
         end
-        #hf.write("<table><tr class='article_style'><td>" + omni_url[x] + "</td></tr></table>") 
+        hf.write("<p><p><a href='#top_of_page'>Back to Top</a>")
         hf.write("<p class='end_test_style'>" + omni_url[x] + "</p><p><p><p><p>") 
 
         module_cnt = 0
