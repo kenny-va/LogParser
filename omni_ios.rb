@@ -385,8 +385,28 @@ for x in 0..omni_index-1 #Loop through each omniture call
             #hf.write("<div id='myid" + id.to_s + "' style='display:none;'><table " + omni_style + "><tr><td>" + omni_url[x] + "</td></tr></table></div>")
             #id = id + 1  
 
-            #Beginning of each omniture call
-            hf.write("<a href=""javascript:ReverseDisplay('myid" + div_counter.to_s + "')"">Omniture call " + div_counter.to_s + "</a>")
+            ###################################
+            #
+            # Write out the Omniture parameters
+            #
+            ###################################
+
+            # Get the A.ACTION value (if present)
+            action_value = ""
+            for y in 0..100   
+                if omni_data[x,y,0].nil? 
+                    break
+                elsif omni_data[x,y,0].upcase.include? "A.ACTION"
+                    action_value = "Action=" + omni_data[x,y,1]
+                    break
+                end
+            end
+            if action_value.length == 0
+                action_value = "Omniture call " + div_counter.to_s
+            end
+
+            # Write the hyperlink for the Omniture call
+            hf.write("<a href=""javascript:ReverseDisplay('myid" + div_counter.to_s + "')"">" + action_value + "</a>")
             hf.write("<div id='myid" + div_counter.to_s + "' style='display:none;'>")
             hf.write ("<table><tr class=hovertable_header><td>Omniture Parameter</td><td>Value</td></row>")
             for y in 0..100   
