@@ -13,11 +13,7 @@ else
 end
 puts "Filename: " + filename
 
-article_style = "style='font-weight: bold;font-size: xx-large; background-color:yellow'"
-business_rule_style = "style='font-weight: bold;font-size: xx-large; background-color:silver'"
-
 product_name_style = "style='font-weight: bold;font-size: xx-large; background-color:green'"
-gnt_style = "style='background-color: lightblue; '"
 omni_style = "style='background-color: PaleGoldenRod; '"
 
 id = 1 #rolling id # to make unique api call divs
@@ -265,8 +261,7 @@ duplicate_array.clear
 ad_index=0
 hf.write("<p><p><a name='ad_calls'></a>")
 
-#hf.write("<table " + ad_style +"><tr><td>AD CALLS</td><td><a href=""javascript:ReverseDisplay('ADCALL_ID')"">Click to show/hide AD Calls</a></td></tr></table>")
-hf.write("<table style='width:100%'><tr class='ad_style'><td>AD CALLS</td></tr></table>")
+hf.write("<table><tr class='ad_style'><td>AD CALLS</td></tr></table>")
 
 hf.write("<a href=""javascript:ReverseDisplay('ADCALL_ID')"">Click to show/hide AD Calls</a>")
 hf.write("<div id='ADCALL_ID' style='display:none;'>")
@@ -408,7 +403,7 @@ for x in 0..omni_index-1 #Loop through each omniture call
             # Write the hyperlink for the Omniture call
             hf.write("<a href=""javascript:ReverseDisplay('myid" + div_counter.to_s + "')"">" + action_value + "</a>")
             hf.write("<div id='myid" + div_counter.to_s + "' style='display:none;'>")
-            hf.write ("<table class=table_omniture><tr class=hovertable_header><td>Omniture Parameter</td><td>Value</td></row>")
+            hf.write ("<table class='table_omniture'><tr class=hovertable_header><td>Omniture Parameter</td><td>Value</td></row>")
             for y in 0..100   
                 if omni_data[x,y,0].nil? 
                     break
