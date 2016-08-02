@@ -59,7 +59,6 @@ product_name_style {
 .hovertable_header {
 	font-family: verdana,arial,sans-serif;
 	font-size:11px;
-	color:#333333;
 	border-width: 1px;
 	border-color: wheat;
 	border-collapse: collapse;
@@ -71,7 +70,7 @@ product_name_style {
 .hovertable {
 	font-family: verdana,arial,sans-serif;
 	font-size:11px;
-	color:wheat;
+	background-color:wheat;
 	border-width: 1px;
 	border-color: #999999;
 	border-collapse: collapse;
