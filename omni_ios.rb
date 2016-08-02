@@ -403,7 +403,7 @@ for x in 0..omni_index-1 #Loop through each omniture call
             # Write the hyperlink for the Omniture call
             hf.write("<a href=""javascript:ReverseDisplay('myid" + div_counter.to_s + "')"">" + action_value + "</a>")
             hf.write("<div id='myid" + div_counter.to_s + "' style='display:none;'>")
-            hf.write ("<table class='table_omniture'><tr class=hovertable_header><td>Omniture Parameter</td><td>Value</td></row>")
+            hf.write ("<table><tr class=hovertable_header><td>Omniture Parameter</td><td>Value</td></row>")
             for y in 0..100   
                 if omni_data[x,y,0].nil? 
                     break
