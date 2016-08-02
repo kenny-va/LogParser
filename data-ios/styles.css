@@ -56,6 +56,10 @@ product_name_style {
 	vertical-align: top;
 }
 
+.table_omniture {
+	background-color: wheat;
+}
+
 .hovertable_header {
 	font-family: verdana,arial,sans-serif;
 	font-size:11px;
