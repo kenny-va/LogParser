@@ -78,6 +78,17 @@ product_name_style {
 	width:40%;
 }
 
+.hovertable_bad {
+	font-family: verdana,arial,sans-serif;
+	font-size:11px;
+	background-color:red;
+	border-width: 1px;
+	border-color: #999999;
+	border-collapse: collapse;
+	vertical-align: top;
+	width:40%;
+}
+
 .hovertable tr {
 	background-color:wheat;
 }

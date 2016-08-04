@@ -1,6 +1,8 @@
 require 'uri'
 require "./check_duplicate.rb"
 require "./mobile-automation-values.rb"
+require "./biz_rules.rb"
+require "./biz_validate.rb"
 #require "pry"
 
 #TO DO'S
@@ -26,16 +28,13 @@ in_test = false #tracks if we are currently within a test when parsing the log
 ad_data = Array.new(1000) { Array.new(5) }   #array for ad calls.  1000 is upper bound.
 ad_index = 0  #counter for ad call array
 
-#omni_data = Array.new(1000, Array.new(200, Array.new(2))) 
 omni_data = My3Array.new
-omni_testname = Array.new(100,"")  #Stores the name of the automated test
-omni_url = Array.new(100,"")
-duplicate_array = Array.new(10,"")  # Stores names of test that are duplicate. These are prevented from printing out more than once.
-duplicate_count = 0  #Stores actual number of entries in the duplicate_array
+omni_testname = Array.new  #Stores the name of the automated test
+omni_url = Array.new
+current_testname = ""   #Current test being processed
 
-# for i in 0..99
-#     omni_url[i] = "blank"
-# end
+duplicate_array = Array.new  # Stores names of test that are duplicate. These are prevented from printing out more than once
+duplicate_count = 0  #Stores actual number of entries in the duplicate_array
 
 omni_index = 0  #counter for omniture calls
 omni_row = 0 #counter for # of parameters per omniture call
@@ -76,8 +75,7 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
             j = line.index("TESTNAME:")  
 
             # This will strip off the text prior to and after the TEST NAME
-            omni_testname[omni_index] = line.slice(j+12,line.length-(j+12+2)) #(j+14))
-            #omni_testname[omni_index] = line.slice(j+9,line.length-(j+12+4))
+            omni_testname[omni_index] = line.slice(j+12,line.length-(j+12+2)) 
             puts "Stored omni_testname: #{omni_testname[omni_index]}"
 
             in_test = true
@@ -151,8 +149,6 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
                 #puts "Omni_call: #{omni_url[omni_index]}"  
 
             end 
-
-            #puts "Omni_call: #{omni_url[omni_index]}"  
 
             prefix_cnt = 0
             prefixes = ["","","","","",""] #this array holds the prefixes, ie: c.a.DeviceName
@@ -230,7 +226,7 @@ puts "Printing product name information.  Omni_index: #{omni_index}"
 for i in 0..omni_index - 1
     if !omni_testname[i].nil?
         if omni_testname[i].length > 0
-            hf.write("<p><p><a href='##{omni_testname[i]}'>Jump to #{omni_testname[i]}</a><br>")
+            hf.write("<p><p><a href='./api-url-logfile/#{omni_testname[i]}'>Jump to #{omni_testname[i]}</a><br>")
         end
     end
     if !omni_url[i].nil?
@@ -245,7 +241,7 @@ for i in 0..omni_index - 1
     end
 end
 
-# clear the duplicate data (to be used again later)
+# clear the data as routine may be used again
 duplicate_count = 0
 duplicate_array.clear
 
@@ -258,6 +254,10 @@ duplicate_array.clear
 #
 #
 ###################################################################################
+
+=begin
+
+
 ad_index=0
 hf.write("<p><p><a name='ad_calls'></a>")
 
@@ -284,6 +284,11 @@ end #do
 #Build the html table casing
 hf.write("</table></div>")
 
+=end
+
+
+
+
 ###################################################################################
 #
 #
@@ -296,7 +301,6 @@ hf.write("</table></div>")
 
 hf.write("<p><p><a href='#top_of_page'>Back to Top</a><br><br>")
 
-#puts "Value of omni_index: #{omni_index}"
 for x in 0..omni_index-1 #Loop through each omniture call
 
     if !omni_testname[x].nil? and omni_testname[x].length > 1
@@ -324,6 +328,7 @@ for x in 0..omni_index-1 #Loop through each omniture call
         puts "Is this a duplicate? #{duplicate}"
 
         if !duplicate
+            current_testname = omni_url[x].slice(omni_url[x].index(":")+2,omni_url[x].length).strip
             if module_cnt > 0
                 hf.write("</td></row></table>")
             end
@@ -335,6 +340,7 @@ for x in 0..omni_index-1 #Loop through each omniture call
 
     elsif omni_url[x].include? "Ending Omniture test"
         if !duplicate
+            current_testname = ""
             if module_cnt > 0
                 hf.write("</td></row></table>")
             end
@@ -354,6 +360,7 @@ for x in 0..omni_index-1 #Loop through each omniture call
 
         module_cnt = 0
     end
+
 
     if !omni_url[x].nil? and omni_url[x].length > 0 and !duplicate
 
@@ -375,7 +382,7 @@ for x in 0..omni_index-1 #Loop through each omniture call
                     module_cnt = 0 
             end     
 
-           #Write out the API call
+            #Write out the API call
             #hf.write("<a href=""javascript:ReverseDisplay('myid" + id.to_s + "')"">Click to show/hide parameters</a>")
             #hf.write("<div id='myid" + id.to_s + "' style='display:none;'><table " + omni_style + "><tr><td>" + omni_url[x] + "</td></tr></table></div>")
             #id = id + 1  
@@ -386,29 +393,41 @@ for x in 0..omni_index-1 #Loop through each omniture call
             #
             ###################################
 
-            # Get the A.ACTION value (if present)
-            action_value = ""
+            # Get the anchor tag test (A.ACTION or C.GNT.CONTENTTYPE)
+            anchor_text = ""
             for y in 0..100   
                 if omni_data[x,y,0].nil? 
                     break
                 elsif omni_data[x,y,0].upcase.include? "A.ACTION"
-                    action_value = "Action=" + omni_data[x,y,1]
+                    anchor_text = "Action=" + omni_data[x,y,1]
+                    break
+                elsif omni_data[x,y,0].upcase.include? "C.GNT.CONTENTTYPE"
+                    anchor_text = "ContentType=" + omni_data[x,y,1]
                     break
                 end
             end
-            if action_value.length == 0
-                action_value = "Omniture call " + div_counter.to_s
+            if anchor_text.length == 0
+                anchor_text = "Omniture call " + div_counter.to_s
             end
 
             # Write the hyperlink for the Omniture call
-            hf.write("<a href=""javascript:ReverseDisplay('myid" + div_counter.to_s + "')"">" + action_value + "</a>")
+            hf.write("<a href=""javascript:ReverseDisplay('myid" + div_counter.to_s + "')"">" + anchor_text + "</a>")
             hf.write("<div id='myid" + div_counter.to_s + "' style='display:none;'>")
             hf.write ("<table><tr class=hovertable_header><td>Omniture Parameter</td><td>Value</td></row>")
             for y in 0..100   
                 if omni_data[x,y,0].nil? 
                     break
                 else    
-                    hf.write("<tr class=hovertable>")
+
+                    # Validate the property
+                    valid = biz_validate($biz,current_testname,omni_data[x,y,0],omni_data[x,y,1])
+                    if valid #this is good
+                        tmp = "hovertable"
+                    else #this is bad
+                        tmp = "hovertable_bad"
+                    end
+                    hf.write("<tr class=" + tmp + ">")
+
                     hf.write("<td>"+omni_data[x,y,0]+"</td>")
                     hf.write("<td>"+omni_data[x,y,1]+"</td>")
                     hf.write("</tr>")
