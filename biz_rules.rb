@@ -31,7 +31,7 @@ $biz = My3Array.new
 $biz[0,0,0] = "Hamburger Button on NEWS front"
 
 $biz[0,1,0] = "C.A.ACTION"
-$biz[0,1,1] = "|MENUTPOPEN|"
+$biz[0,1,1] = "|MENUTAPOPEN|"
 
 $biz[0,2,0] = "C.A.DEVICENAME"
 $biz[0,2,1] = "|NOTNULL|"
@@ -40,7 +40,7 @@ $biz[0,3,0] = "C.A.APPID"
 $biz[0,3,1] = "|NOTNULL|"
 
 $biz[0,4,0] = "C.GNT.ORIENTATION"
-$biz[0,4,1] = "|PORTRAT|LANDSCAPE|"
+$biz[0,4,1] = "|PORTRAIT|LANDSCAPE|"
 
 # NEWS FRONT TEST
 $biz[1,0,0] = "NEWS FRONT"
