@@ -1,3 +1,6 @@
+# This routine checks to see if an entry has already been added to the duplicate_array.  It is used multiple times
+# throughout the testing algorithm.
+#
 def check_duplicate(duplicate_array, duplicate_count, testname)
 
 	is_duplicate = false
