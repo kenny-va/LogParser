@@ -41,6 +41,13 @@ product_name_style {
 	background-color:black;
 }
 
+.comscore_style {
+	font-weight: normal;
+	font-size: medium; 
+	color: white;
+	background-color:hotpink;
+
+}
 .end_test_style {
 	font-weight: bold;
 	font-size: x-large; 
@@ -52,6 +59,9 @@ product_name_style {
 	font-weight: : bold;
 }
 
+.table90 {
+	width: '80%';
+}
 .outsidetable {
 	vertical-align: top;
 }

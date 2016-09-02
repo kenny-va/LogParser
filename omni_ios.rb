@@ -32,6 +32,7 @@ omni_data = My3Array.new
 omni_testname = Array.new  #Stores the name of the automated test
 omni_url = Array.new
 current_testname = ""   #Current test being processed
+comscore = "" # Store the comscore call
 
 duplicate_array = Array.new  # Stores names of test that are duplicate. These are prevented from printing out more than once
 duplicate_count = 0  #Stores actual number of entries in the duplicate_array
@@ -76,12 +77,12 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
 
             # This will strip off the text prior to and after the TEST NAME
             omni_testname[omni_index] = line.slice(j+12,line.length-(j+12+2)) 
-            puts "Stored omni_testname: #{omni_testname[omni_index]}"
+            #puts "Stored omni_testname: #{omni_testname[omni_index]}"
 
             in_test = true
             module_cnt = 0
 
-            puts "Start of " + omni_testname[omni_index]
+            #puts "Start of " + omni_testname[omni_index]
             omni_index = omni_index + 1
         
         
@@ -94,7 +95,7 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
         elsif line.include? "THE_PRODUCT_NAME_IS"
 
             product_name = line.slice(line.index("THE_PRODUCT_NAME_IS") + 20,line.length)
-            puts "Product name is: #{product_name}"
+            #puts "Product name is: #{product_name}"
 
 
         elsif line.include? "Testing environment:"
@@ -110,6 +111,12 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
             omni_url[omni_index] = line.slice(line.index("Ending Omniture test:"),line.length).strip
             omni_index = omni_index + 1
 
+        elsif line.include? "sb.scorecardresearch.com"
+
+            comscore = URI.decode(line)
+            comscore = comscore.slice(line.index("https"),comscore.length).strip
+            puts "Comscore: " + comscore
+
         elsif line.include? "/gampad/"
         
             #puts "Ad_Request: #{line}"
@@ -119,19 +126,19 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
             ad_values.each do |value|
                 #puts "Value comparing: " + value
                 if value.start_with? ("iu") 
-                    puts "found the &iu parameter"
+                    #puts "found the &iu parameter"
                     ad_data[ad_index][0] = URI.decode(value.slice(value.index("iu=")+3,value.length))
-                    puts "AD Data stored: " + ad_data[ad_index][0]
+                    #puts "AD Data stored: " + ad_data[ad_index][0]
                  
                 elsif value.start_with? ("sz") 
-                    puts "found the &sz parameter"
+                    #puts "found the &sz parameter"
                     ad_data[ad_index][1] = URI.decode(value.slice(value.index("sz=")+3,value.length))
-                    puts "AD Data stored: " + ad_data[ad_index][1]
+                    #puts "AD Data stored: " + ad_data[ad_index][1]
                 end                
             end
 
             ad_index = ad_index + 1
-            puts "Ads found thus far: #{ad_index}"
+            #puts "Ads found thus far: #{ad_index}"
 
         elsif (line.include? "repdata.usatoday.com") and in_test
         #elsif (line.include? "gannett.demdex.net" or line.include? "repdata.usatoday.com") and in_test  #REMOVE DEMDEX CALLS
@@ -221,7 +228,7 @@ end #open file
 hf.write("<table style='width:100%'><tr><td><product_name_style>PRODUCT TESTED: " + product_name + "</product_name_style></td></tr>")
 hf.write("<tr><td>Environment tested: #{environment_tested}</td></tr></table>")
 
-puts "Printing product name information.  Omni_index: #{omni_index}"
+#puts "Printing product name information.  Omni_index: #{omni_index}"
 
 for i in 0..omni_index - 1
     if !omni_testname[i].nil?
@@ -293,7 +300,7 @@ hf.write("</table></div>")
 #
 #
 #
-#Beginning printing the smoke tests
+# Beginning printing the smoke tests
 #
 #
 #
@@ -304,7 +311,7 @@ hf.write("<p><p><a href='#top_of_page'>Back to Top</a><br><br>")
 for x in 0..omni_index-1 #Loop through each omniture call
 
     if !omni_testname[x].nil? and omni_testname[x].length > 1
-        puts "Testname length > 0:  #{omni_testname[x]}"
+        #puts "Testname length > 0:  #{omni_testname[x]}"
         if module_cnt > 0
             hf.write("</td></row></table>")
         end
@@ -318,14 +325,14 @@ for x in 0..omni_index-1 #Loop through each omniture call
     elsif omni_url[x].include? "Beginning Omniture test:"
         
         #Check for a duplicate test
-        puts "Calling duplicate function with #{omni_url[x]}"
+        #puts "Calling duplicate function with #{omni_url[x]}"
         #puts omni_url[x]
         duplicate = check_duplicate(duplicate_array, duplicate_count, omni_url[x])
         if !duplicate
             duplicate_array[duplicate_count] = omni_url[x]
             duplicate_count = duplicate_count + 1
         end
-        puts "Is this a duplicate? #{duplicate}"
+        #puts "Is this a duplicate? #{duplicate}"
 
         if !duplicate
             current_testname = omni_url[x].slice(omni_url[x].index(":")+2,omni_url[x].length).strip
@@ -436,12 +443,15 @@ for x in 0..omni_index-1 #Loop through each omniture call
             hf.write("</table></div>")
             div_counter = div_counter + 1
             
-        else
-            puts "Strange omni_url value: #{omni_url[x]}"
+        #else
+        #    puts "Strange omni_url value: #{omni_url[x]}"
         end
     end
 
 end 
+
+hf.write("<p></p><p></p><p></p>")
+hf.write("<table style=table90><tr class=comscore_style><td>COMSCORE</td><td>" + comscore + "</td></tr></table>")
 
 hf.write("</body></html>")
 
