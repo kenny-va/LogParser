@@ -140,16 +140,17 @@ File.open(filename) do |file|       #LOOP THROUGH THE FILE TO PROCESS SPECIFIC L
             ad_index = ad_index + 1
             #puts "Ads found thus far: #{ad_index}"
 
-        elsif (line.include? "repdata.usatoday.com") and in_test
+        elsif (line.include? "repdata.usatoday.com") and in_test and !line.include? "http://repdata.usatoday.com/id"
         #elsif (line.include? "gannett.demdex.net" or line.include? "repdata.usatoday.com") and in_test  #REMOVE DEMDEX CALLS
      
-            if line.include? "gannett.demdex.net"
+            if line.include? "gannett.demdex.net" 
                 omni_call = URI.decode(line.slice(line.index("gannett.demdex.net/event?"),line.length))
                 omni_url[omni_index] = omni_call.slice(0,omni_call.length-2)
 
                 omni_call = omni_call.slice(omni_call.index("?")+1,omni_call.length)  #Strip off the domain and API call, leaving just the parameters
                 omni_call = omni_call.slice(0,omni_call.length-3)  #strip off last )
             else
+
                 omni_call = URI.decode(line.slice(line.index("/ndh")+1,line.length))
                 omni_url[omni_index] = omni_call.slice(0,omni_call.length-2)
 
